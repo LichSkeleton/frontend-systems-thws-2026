@@ -33,3 +33,7 @@ We plan to mock our data for the backend and will not implement a real data proc
 ## Project Scope
 
 This is a frontend-only project with no working backend, authentication, or real-time functionality. The platform is built for general community use, centered on basic note management and a simple popularity system. Features such as commenting, advanced search, and persistent data storage are outside the scope of this project.
+
+#### Acknowledging AI Technologies
+
+This document was revised with the support of Claude. The authors used the tool to improve wording, but all project-specific content and final decisions were made and reviewed by the team.
