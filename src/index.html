@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Complaint Board</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <span class="logo-icon">📌</span>
+        <div>
+          <h1 class="logo-title">AI Complaint Board</h1>
+          <p class="logo-sub">A place to vent about AI</p>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <span class="nav-link">Top Notes</span>
+        <span class="nav-link">Recent</span>
+        <button type="button" class="btn-post">+ Post Note</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- TOP 6 (sticky notes) — static shell -->
+    <section id="top-section" class="board-section">
+      <div class="section-heading">
+        <h2>Top Complaints</h2>
+        <span class="section-sub">Most popular this week</span>
+      </div>
+      <div class="corkboard" id="popularBoard"></div>
+    </section>
+
+    <div class="divider"><span>Recent Notes</span></div>
+
+    <!-- RECENT NOTES (cards) — static shell -->
+    <section id="recent-section" class="board-section">
+      <div class="section-heading">
+        <h2>Recent Posts</h2>
+        <span class="section-sub">Freshly pinned to the board</span>
+      </div>
+      <div class="recent-grid" id="recentBoard"></div>
+      <div class="pagination">
+        <button type="button" class="page-btn disabled" disabled>← Prev</button>
+        <span class="page-info">Page 1 of 1</span>
+        <button type="button" class="page-btn disabled" disabled>Next →</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <strong>AI Complaint Board</strong>
+        <p>A community space to voice concerns about artificial intelligence.</p>
+      </div>
+      <div class="footer-col">
+        <strong>Team</strong>
+        <p>Mallory Whitt · Timo Brand · Vladyslav Zaplitnyi</p>
+        <p class="footer-dim">THWS · Frontend Systems · 2026</p>
+      </div>
+      <div class="footer-col footer-dim">
+        <p>Frontend-only · Mock data · No backend</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 AI Complaint Board</div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

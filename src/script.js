@@ -1,0 +1,95 @@
+/* ============================================================
+   AI Complaint Board — UI shell (desktop layout only)
+   Teammates: wire sorting, voting, pagination, and create-note.
+   ============================================================ */
+
+// --------------- MOCK DATA ---------------
+const NOTES = [
+  { id: 1, title: "ChatGPT Wrote My Thesis", description: "ChatGPT wrote my entire thesis and now I don't know what I actually believe anymore. I defended ideas I barely understand.", color: "yellow", up: 312, down: 14, date: "2026-05-28" },
+  { id: 2, title: "AI Replaced Our Writers", description: "My boss replaced our whole content team with an AI that produces 200 articles a day. None of them are readable or fact-checked.", color: "pink", up: 287, down: 9, date: "2026-05-25" },
+  { id: 3, title: "Resume Screener Rejected Me", description: "I got rejected from a job because an AI resume screener couldn't parse my creative CV format. A human never saw my application.", color: "blue", up: 264, down: 11, date: "2026-05-20" },
+  { id: 4, title: "AI Art Won the Festival", description: "AI-generated art won first place at our local art festival. The human artists are furious and considering a boycott next year.", color: "green", up: 241, down: 22, date: "2026-05-18" },
+  { id: 5, title: "Useless AI Assistants Everywhere", description: "Every app now has an 'AI assistant' button that does literally nothing useful. It's marketing with extra steps.", color: "orange", up: 229, down: 7, date: "2026-05-15" },
+  { id: 6, title: "AI Diagnosed Horse Disease", description: "My doctor used AI to diagnose me. It suggested I might have a 'horse disease'. I'm a human. I don't have hooves.", color: "purple", up: 215, down: 18, date: "2026-05-10" },
+  { id: 7, title: "AI Tutors Can't Do Math", description: "AI tutors are replacing teachers but can't explain why 2+2=4 without hallucinating. Students are more confused than before.", color: "yellow", up: 188, down: 5, date: "2026-05-30" },
+  { id: 8, title: "Same 5 Songs Forever", description: "Spotify's AI playlist gave me the same 5 songs for 3 months straight. I'm losing my mind and my taste in music.", color: "blue", up: 175, down: 3, date: "2026-05-29" },
+  { id: 9, title: "AI Love Letter Ruined Me", description: "AI wrote a love letter for my friend. She read it to me. It was better than anything I've ever written. I'm devastated.", color: "pink", up: 162, down: 6, date: "2026-05-27" },
+  { id: 10, title: "Bots Understand Nothing", description: "Customer service bots keep saying 'I understand your frustration' which somehow makes it worse every single time.", color: "orange", up: 148, down: 20, date: "2026-05-26" },
+  { id: 11, title: "Banned for Baking Bread", description: "AI moderation removed my post about baking bread because the algorithm flagged the word 'loaf' as suspicious activity.", color: "green", up: 134, down: 4, date: "2026-05-24" },
+  { id: 12, title: "Unexpected Item. Always.", description: "Self-checkout AI at the grocery store thinks everything I buy is 'unexpected item in bagging area'. Even the bag.", color: "purple", up: 122, down: 8, date: "2026-05-22" },
+  { id: 13, title: "Name Too Short for AI", description: "AI-powered HR software rejected my application because my name is too short. I've been 'Tim' for 28 years.", color: "yellow", up: 109, down: 2, date: "2026-05-31" },
+  { id: 14, title: "Smart Fridge Pizza Order", description: "My smart fridge suggested I order pizza because it detected my groceries as 'insufficient for human survival'.", color: "blue", up: 97, down: 10, date: "2026-06-01" },
+  { id: 15, title: "One Bug, Seventeen New Ones", description: "The AI code assistant fixed one bug and introduced seventeen new ones. I should have left the code alone.", color: "green", up: 88, down: 6, date: "2026-06-02" },
+  { id: 16, title: "GPS Routed Through a Lake", description: "AI navigation re-routed me through a lake. A real lake. With water. I had to turn around at the shoreline.", color: "orange", up: 83, down: 1, date: "2026-05-19" },
+  { id: 17, title: "Coffee Is Unusual Spending", description: "My bank's AI flagged my coffee purchase as 'unusual spending behavior'. I drink coffee every single day at the same café.", color: "pink", up: 79, down: 3, date: "2026-05-17" },
+  { id: 18, title: "Resignation Autocomplete", description: "An AI 'helpfully' autocompleted my resignation letter as I typed a grocery list. My manager got a draft by accident.", color: "purple", up: 74, down: 2, date: "2026-05-14" },
+  { id: 19, title: "Translation Diplomatic Incident", description: "AI translation turned my friendly email into something that apparently started a diplomatic incident with our partners abroad.", color: "yellow", up: 70, down: 5, date: "2026-05-12" },
+  { id: 20, title: "AI in My Diary", description: "My AI writing assistant keeps adding 'As an AI language model...' to my personal diary entries. It's not personal anymore.", color: "blue", up: 67, down: 4, date: "2026-05-09" },
+  { id: 21, title: "Scenic Detours Forever", description: "The AI in my car keeps suggesting 'scenic detours' that add 45 minutes to every trip. I just want to get home.", color: "green", up: 63, down: 2, date: "2026-05-07" },
+  { id: 22, title: "Everyone Has the Same Face", description: "AI photo editing 'enhanced' my family portrait by giving everyone the same face. We look like clones at a reunion.", color: "pink", up: 59, down: 7, date: "2026-05-05" },
+  { id: 23, title: "Double Dentist Booking", description: "My AI scheduling assistant booked a dentist appointment during my dentist appointment. I can't be in two chairs at once.", color: "orange", up: 55, down: 1, date: "2026-05-03" },
+  { id: 24, title: "Sydney Is Not the Capital", description: "ChatGPT confidently told me the capital of Australia is Sydney. It's Canberra. I used it in a presentation in front of 200 people.", color: "purple", up: 51, down: 9, date: "2026-05-01" },
+  { id: 25, title: "Ticket Closed, Problem Open", description: "AI customer support solved my problem by closing the ticket and marking it as resolved. The problem was not resolved at all.", color: "yellow", up: 47, down: 3, date: "2026-04-29" },
+  { id: 26, title: "Funeral Music for Boredom", description: "My smart speaker started playing funeral music when I said I was 'dying of boredom'. My roommate thought something happened.", color: "blue", up: 43, down: 0, date: "2026-04-27" },
+  { id: 27, title: "Mean Cleaning, Not ML", description: "AI subtitles kept replacing 'machine learning' with 'mean cleaning'. The talk was about machine learning. The audience was confused.", color: "green", up: 39, down: 2, date: "2026-04-25" },
+  { id: 28, title: "Fiction Failed Fact-Check", description: "An AI graded my creative writing a 2/10 for 'factual inaccuracies'. It was fiction. That is the entire point of fiction.", color: "pink", up: 36, down: 1, date: "2026-04-23" },
+  { id: 29, title: "Pizza Diet From Browsing", description: "AI recommended me a diet plan based on my browsing history. I only searched pizza recipes ironically. Now it thinks I'm serious.", color: "orange", up: 32, down: 4, date: "2026-04-20" },
+  { id: 30, title: "AI for AI Startup", description: "The AI startup my friend works at just pivoted for the 6th time in two years. Current direction: 'AI for AI'. Nobody knows what that means.", color: "purple", up: 28, down: 2, date: "2026-04-18" },
+];
+
+const DISPLAY_NOTES = NOTES.slice(0, 6);
+const TILTS = [-3, 2, -2, 3, -1.5, 2.5];
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function votesHtml(note) {
+  return `
+    <div class="note-votes">
+      <span class="vote-btn vote-up">👍 <span class="vote-count">${note.up}</span></span>
+      <span class="vote-btn vote-down">👎 <span class="vote-count">${note.down}</span></span>
+    </div>`;
+}
+
+function createFeaturedNote(note, rank, tiltDeg) {
+  const el = document.createElement("article");
+  el.className = `sticky-note note-${note.color}`;
+  el.style.transform = `rotate(${tiltDeg}deg)`;
+  el.innerHTML = `
+    <span class="note-rank">#${rank}</span>
+    <h3 class="note-title"><span class="note-title-link">${escapeHtml(note.title)}</span></h3>
+    <div class="note-footer">
+      ${votesHtml(note)}
+      <span class="note-date">${formatDate(note.date)}</span>
+    </div>`;
+  return el;
+}
+
+function createRecentCard(note) {
+  const el = document.createElement("div");
+  el.className = `recent-card note-${note.color}`;
+  el.innerHTML = `
+    <h3 class="card-title"><span class="note-title-link">${escapeHtml(note.title)}</span></h3>
+    <div class="card-footer">
+      ${votesHtml(note)}
+      <span class="note-date">${formatDate(note.date)}</span>
+    </div>`;
+  return el;
+}
+
+function renderShell() {
+  const popularBoard = document.getElementById("popularBoard");
+  const recentBoard = document.getElementById("recentBoard");
+
+  DISPLAY_NOTES.forEach((note, i) => {
+    popularBoard.appendChild(createFeaturedNote(note, i + 1, TILTS[i]));
+    recentBoard.appendChild(createRecentCard(note));
+  });
+}
+
+renderShell();

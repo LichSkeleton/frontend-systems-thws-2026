@@ -1,0 +1,456 @@
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --yellow:  #fef08a;  --yellow-s: #b8860b;
+  --pink:    #fda4af;  --pink-s:   #be3a5b;
+  --blue:    #93c5fd;  --blue-s:   #2563ae;
+  --green:   #86efac;  --green-s:  #16a34a;
+  --orange:  #fdba74;  --orange-s: #c2570c;
+  --purple:  #c4b5fd;  --purple-s: #7c3aed;
+
+  --page-bg:    #f4ece0;
+  --cork-bg:    #c08040;
+  --header-bg:  #2d1810;
+  --header-border: #8b5e3c;
+  --text:       #1a1a1a;
+  --text-muted: #6b5040;
+
+  --font-hand: 'Caveat', cursive;
+  --font-ui:   'Inter', sans-serif;
+}
+
+body  {
+  font-family: var(--font-ui);
+  background: var(--page-bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--header-bg);
+  border-bottom: 3px solid var(--header-border);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.logo-icon { font-size: 1.8rem; }
+
+.logo-title {
+  font-family: var(--font-hand);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--yellow);
+  line-height: 1.15;
+}
+
+.logo-sub {
+  font-size: 0.7rem;
+  color: #c9a87c;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  color: #c9a87c;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: default;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-link:hover {
+  background: rgba(254,240,138,0.12);
+  color: var(--yellow);
+}
+
+.btn-post {
+  background: var(--yellow);
+  color: #5a3e00;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 0 var(--yellow-s);
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.btn-post:hover  { transform: translateY(-2px); box-shadow: 0 4px 0 var(--yellow-s); }
+.btn-post:active { transform: translateY(0);    box-shadow: 0 1px 0 var(--yellow-s); }
+
+/* ============================================================
+   SECTION STRUCTURE
+   ============================================================ */
+.board-section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 24px 36px;
+  width: 100%;
+}
+
+.section-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.section-heading h2 {
+  font-family: var(--font-hand);
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #2d1810;
+}
+
+.section-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.divider {
+  max-width: 1280px;
+  margin: 0 auto 4px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--cork-bg), transparent);
+  border-radius: 2px;
+}
+
+/* ============================================================
+   CORKBOARD (featured stickers)
+   ============================================================ */
+.corkboard {
+  background: var(--cork-bg);
+  background-image:
+    radial-gradient(ellipse at 20% 30%, rgba(160,100,40,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(100,60,20,0.25) 0%, transparent 50%),
+    repeating-linear-gradient(45deg, rgba(0,0,0,0.025) 0px, rgba(0,0,0,0.025) 2px, transparent 2px, transparent 9px);
+  border: 5px solid #8b5e3c;
+  border-radius: 10px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.2), 0 4px 20px rgba(0,0,0,0.2);
+  padding: 32px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ============================================================
+   STICKY NOTES (featured only)
+   ============================================================ */
+.sticky-note {
+  position: relative;
+  width: clamp(160px, 17vw, 210px);
+  min-height: 160px;
+  padding: 18px 16px 16px;
+  border-radius: 2px;
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #1a1a1a;
+  cursor: default;
+  word-break: break-word;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Bottom-right paper fold */
+.sticky-note::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 20px; height: 20px;
+  background: linear-gradient(225deg, rgba(0,0,0,0.14) 50%, transparent 50%);
+}
+
+.sticky-note:hover {
+  transform: scale(1.05) rotate(0deg) !important;
+  z-index: 10;
+}
+
+.note-rank {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: rgba(0,0,0,0.4);
+  text-transform: uppercase;
+}
+
+.note-title,
+.card-title {
+  flex: 1;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.note-title-link {
+  font-family: var(--font-hand);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #1a1a1a;
+}
+
+/* ============================================================
+   NOTE FOOTER (votes + date) — used in both stickers & cards
+   ============================================================ */
+.note-footer,
+.card-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.note-votes {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.vote-btn {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: default;
+  line-height: 1;
+  white-space: nowrap;
+  font-family: var(--font-ui);
+}
+
+.vote-up {
+  background: rgba(22,163,74,0.15);
+  color: #14532d;
+  border: 1.5px solid rgba(22,163,74,0.4);
+}
+
+.vote-up:hover {
+  background: rgba(22,163,74,0.28);
+  border-color: #16a34a;
+}
+
+.vote-down {
+  background: rgba(220,38,38,0.12);
+  color: #7f1d1d;
+  border: 1.5px solid rgba(220,38,38,0.35);
+}
+
+.vote-down:hover {
+  background: rgba(220,38,38,0.24);
+  border-color: #dc2626;
+}
+
+.vote-count {
+  font-size: 0.95rem;
+  font-weight: 800;
+  min-width: 18px;
+  text-align: left;
+}
+
+.note-date {
+  font-size: 0.72rem;
+  color: rgba(0,0,0,0.45);
+  white-space: nowrap;
+  font-family: var(--font-ui);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   NOTE COLOURS
+   ============================================================ */
+.note-yellow { background: var(--yellow); box-shadow: 4px 6px 0 var(--yellow-s), 4px 8px 18px rgba(0,0,0,0.22); }
+.note-pink   { background: var(--pink);   box-shadow: 4px 6px 0 var(--pink-s),   4px 8px 18px rgba(0,0,0,0.22); }
+.note-blue   { background: var(--blue);   box-shadow: 4px 6px 0 var(--blue-s),   4px 8px 18px rgba(0,0,0,0.22); }
+.note-green  { background: var(--green);  box-shadow: 4px 6px 0 var(--green-s),  4px 8px 18px rgba(0,0,0,0.22); }
+.note-orange { background: var(--orange); box-shadow: 4px 6px 0 var(--orange-s), 4px 8px 18px rgba(0,0,0,0.22); }
+.note-purple { background: var(--purple); box-shadow: 4px 6px 0 var(--purple-s), 4px 8px 18px rgba(0,0,0,0.22); }
+
+/* ============================================================
+   RECENT CARDS (clean, no tilt)
+   ============================================================ */
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.recent-card {
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 110px;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.recent-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.16);
+  transform: translateY(-3px);
+}
+
+
+/* ============================================================
+   PAGINATION
+   ============================================================ */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  background: #fff;
+  border: 2px solid #d4a96a;
+  border-radius: 8px;
+  padding: 9px 22px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #5a3e00;
+  transition: all 0.15s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: var(--header-bg);
+  color: var(--yellow);
+  border-color: var(--header-bg);
+}
+
+.page-btn:disabled,
+.page-btn.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  min-width: 90px;
+  text-align: center;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer {
+  margin-top: auto;
+  background: var(--header-bg);
+  color: #c9a87c;
+  border-top: 3px solid var(--header-border);
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px 20px;
+  display: flex;
+  gap: 36px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.footer-col {
+  flex: 1;
+  min-width: 170px;
+}
+
+.footer-col strong {
+  display: block;
+  color: var(--yellow);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.footer-col p {
+  font-size: 0.82rem;
+  line-height: 1.7;
+  opacity: 0.8;
+}
+
+.footer-dim { opacity: 0.5 !important; font-size: 0.75rem !important; }
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid rgba(139,94,60,0.35);
+  padding: 12px 24px;
+  font-size: 0.74rem;
+  opacity: 0.45;
+}
