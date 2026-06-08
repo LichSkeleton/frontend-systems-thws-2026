@@ -1,0 +1,998 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AI Complaint Board — Views</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ============================================================
+       VIEWS-SPECIFIC STYLES
+       ============================================================ */
+
+      /* ---- Views sub-nav ---- */
+      .views-nav {
+        position: sticky;
+        top: 68px;
+        z-index: 90;
+        background: #3d2212;
+        border-bottom: 2px solid #6b3c1c;
+        padding: 0 24px;
+      }
+      .views-nav-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        height: 44px;
+        overflow-x: auto;
+      }
+      .view-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #8b6040;
+        padding: 0 6px;
+        margin-right: 4px;
+        white-space: nowrap;
+      }
+      .view-tab {
+        font-size: 0.78rem;
+        font-weight: 600;
+        font-family: var(--font-ui);
+        color: #c9a87c;
+        padding: 6px 14px;
+        border-radius: 5px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition:
+          background 0.15s,
+          color 0.15s;
+        letter-spacing: 0.3px;
+      }
+      .view-tab:hover {
+        background: rgba(254, 240, 138, 0.12);
+        color: var(--yellow);
+      }
+      .view-tab.active {
+        background: var(--yellow);
+        color: #5a3e00;
+      }
+
+      /* ---- Section headings ---- */
+      .view-section {
+        scroll-margin-top: 120px;
+      }
+      .view-section-label {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 32px 24px 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .view-section-label h2 {
+        font-family: var(--font-hand);
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #2d1810;
+      }
+      .view-badge {
+        font-size: 0.68rem;
+        font-weight: 700;
+        font-family: var(--font-ui);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        padding: 3px 9px;
+        border-radius: 20px;
+        background: #2d1810;
+        color: var(--yellow);
+      }
+      .view-desc {
+        max-width: 1280px;
+        margin: 0 auto 16px;
+        padding: 0 24px;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        font-style: italic;
+      }
+
+      /* ---- Viewport scene wrapper ---- */
+      .viewport-frame {
+        max-width: 1280px;
+        margin: 0 auto 56px;
+        padding: 0 24px;
+      }
+      .viewport-scene {
+        position: relative;
+        width: 100%;
+        min-height: 540px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 3px solid #8b5e3c;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+      }
+
+      /* ---- Board background ---- */
+      .scene-bg {
+        position: absolute;
+        inset: 0;
+        background: var(--page-bg);
+        display: flex;
+        flex-direction: column;
+      }
+      .scene-bg-header {
+        height: 54px;
+        background: var(--header-bg);
+        border-bottom: 3px solid var(--header-border);
+        flex-shrink: 0;
+      }
+      .scene-bg-board {
+        flex: 1;
+        background: var(--cork-bg);
+        background-image:
+          radial-gradient(
+            ellipse at 20% 30%,
+            rgba(160, 100, 40, 0.35) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 80% 70%,
+            rgba(100, 60, 20, 0.25) 0%,
+            transparent 50%
+          ),
+          repeating-linear-gradient(
+            45deg,
+            rgba(0, 0, 0, 0.025) 0px,
+            rgba(0, 0, 0, 0.025) 2px,
+            transparent 2px,
+            transparent 9px
+          );
+        display: flex;
+        flex-wrap: wrap;
+        gap: 22px;
+        padding: 28px;
+        align-items: flex-start;
+      }
+
+      /* Mini bg notes */
+      .bg-note {
+        width: 130px;
+        min-height: 110px;
+        border-radius: 2px;
+        padding: 12px;
+        font-family: var(--font-hand);
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: rgba(0, 0, 0, 0.5);
+      }
+      /* The note-color classes from style.css apply box-shadow; keep opacity low for bg notes */
+      .bg-note.note-yellow {
+        opacity: 0.55;
+      }
+      .bg-note.note-pink {
+        opacity: 0.55;
+      }
+      .bg-note.note-blue {
+        opacity: 0.55;
+      }
+      .bg-note.note-green {
+        opacity: 0.55;
+      }
+      .bg-note.note-orange {
+        opacity: 0.55;
+      }
+      .bg-note.note-purple {
+        opacity: 0.55;
+      }
+
+      /* The "featured" bg note for Edit/Delete — slightly more visible */
+      .bg-note-hero {
+        width: 170px;
+        min-height: 150px;
+        opacity: 0.75;
+        font-size: 1.05rem;
+      }
+
+      /* ---- Scrim ---- */
+      .scene-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 10, 5, 0.65);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      /* ============================================================
+       ENLARGED STICKY NOTE MODAL
+       Used for: Single Post, Edit, Delete
+       ============================================================ */
+      .note-modal {
+        position: relative;
+        width: 380px;
+        height: 380px;
+        flex-shrink: 0;
+        border-radius: 3px;
+        padding: 22px 22px 18px;
+        font-family: var(--font-hand);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        overflow: hidden;
+      }
+      /* Paper fold bottom-right */
+      .note-modal::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 26px;
+        height: 26px;
+        background: linear-gradient(
+          225deg,
+          rgba(0, 0, 0, 0.14) 50%,
+          transparent 50%
+        );
+      }
+
+      .note-modal-close {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        background: none;
+        border: none;
+        font-size: 1.1rem;
+        color: rgba(0, 0, 0, 0.35);
+        cursor: pointer;
+        line-height: 1;
+        padding: 2px 5px;
+        border-radius: 4px;
+        font-family: var(--font-ui);
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .note-modal-close:hover {
+        background: rgba(0, 0, 0, 0.1);
+        color: rgba(0, 0, 0, 0.7);
+      }
+
+      /* ---- Single Post: read-only ---- */
+      .note-modal-tag {
+        font-family: var(--font-ui);
+        font-size: 0.62rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: rgba(0, 0, 0, 0.35);
+      }
+      .note-modal-title {
+        font-size: 1.45rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #1a1a1a;
+        margin: 0;
+      }
+      .note-modal-body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #2a2a2a;
+        flex: 1;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+      }
+      .note-modal-footer {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: auto;
+      }
+      .note-modal-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+      }
+      .btn-edit-sm {
+        background: rgba(0, 0, 0, 0.1);
+        border: 1.5px solid rgba(0, 0, 0, 0.18);
+        border-radius: 6px;
+        padding: 6px 13px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        color: #2d1810;
+        font-family: var(--font-ui);
+        transition: background 0.15s;
+      }
+      .btn-edit-sm:hover {
+        background: rgba(0, 0, 0, 0.18);
+      }
+      .btn-delete-sm {
+        background: rgba(220, 38, 38, 0.1);
+        border: 1.5px solid rgba(220, 38, 38, 0.3);
+        border-radius: 6px;
+        padding: 6px 13px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        color: #7f1d1d;
+        font-family: var(--font-ui);
+        transition: background 0.15s;
+      }
+      .btn-delete-sm:hover {
+        background: rgba(220, 38, 38, 0.2);
+      }
+
+      /* ---- Edit: inputs on the note surface ---- */
+      .note-input {
+        background: transparent;
+        border: none;
+        border-bottom: 1.5px solid rgba(0, 0, 0, 0.25);
+        border-radius: 0;
+        padding: 4px 2px;
+        font-family: var(--font-hand);
+        font-weight: 700;
+        color: #1a1a1a;
+        outline: none;
+        width: 100%;
+      }
+      .note-input-title {
+        font-size: 1.4rem;
+        line-height: 1.2;
+      }
+      .note-input-body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        resize: none;
+        display: block;
+      }
+      .note-input:focus,
+      .note-input-body:focus {
+        border-bottom-color: rgba(0, 0, 0, 0.55);
+      }
+
+      .note-modal-edit-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: auto;
+        padding-top: 12px;
+        border-top: 1.5px solid rgba(0, 0, 0, 0.1);
+      }
+      .note-edit-date {
+        font-family: var(--font-ui);
+        font-size: 0.7rem;
+        color: rgba(0, 0, 0, 0.35);
+      }
+      .note-edit-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .btn-note-cancel {
+        background: rgba(0, 0, 0, 0.08);
+        border: 1.5px solid rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        padding: 6px 14px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        color: #2d1810;
+        font-family: var(--font-ui);
+        transition: background 0.15s;
+      }
+      .btn-note-cancel:hover {
+        background: rgba(0, 0, 0, 0.14);
+      }
+      .btn-note-save {
+        background: rgba(0, 0, 0, 0.18);
+        border: 1.5px solid rgba(0, 0, 0, 0.28);
+        border-radius: 6px;
+        padding: 6px 14px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        color: #1a1a1a;
+        font-family: var(--font-ui);
+        transition: background 0.15s;
+      }
+      .btn-note-save:hover {
+        background: rgba(0, 0, 0, 0.28);
+      }
+
+      /* ---- Delete confirmation on the note ---- */
+      .note-delete-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-align: center;
+        padding: 8px 0;
+      }
+      .delete-icon {
+        font-size: 1.7rem;
+      }
+      .delete-question {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        line-height: 1.25;
+      }
+      .delete-subtext {
+        font-family: var(--font-ui);
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: rgba(180, 30, 30, 0.75);
+        margin-top: 2px;
+      }
+      .delete-note-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 6px;
+      }
+      .btn-keep {
+        background: rgba(0, 0, 0, 0.08);
+        border: 1.5px solid rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        padding: 8px 18px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        color: #2d1810;
+        font-family: var(--font-ui);
+        transition: background 0.15s;
+      }
+      .btn-keep:hover {
+        background: rgba(0, 0, 0, 0.14);
+      }
+      .btn-confirm-delete {
+        background: rgba(180, 0, 0, 0.12);
+        border: 1.5px solid rgba(180, 0, 0, 0.35);
+        border-radius: 6px;
+        padding: 8px 18px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+        color: #7f1d1d;
+        font-family: var(--font-ui);
+        transition: background 0.15s;
+      }
+      .btn-confirm-delete:hover {
+        background: rgba(180, 0, 0, 0.22);
+      }
+
+      /* ============================================================
+       CREATE NOTE MODAL — yellow sticky note, square
+       ============================================================ */
+      .create-note-modal {
+        position: relative;
+        width: 380px;
+        height: 380px;
+        flex-shrink: 0;
+        border-radius: 3px;
+        padding: 22px 22px 18px;
+        font-family: var(--font-hand);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        overflow: hidden;
+      }
+      .create-note-modal::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 26px;
+        height: 26px;
+        background: linear-gradient(
+          225deg,
+          rgba(0, 0, 0, 0.14) 50%,
+          transparent 50%
+        );
+      }
+      .create-note-hint {
+        font-family: var(--font-ui);
+        font-size: 0.62rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: rgba(0, 0, 0, 0.35);
+      }
+      .create-note-modal .note-input-title {
+        font-size: 1.4rem;
+      }
+      .create-note-modal .note-input-body {
+        font-size: 1rem;
+        overflow: hidden;
+      }
+
+      /* Swatch row inside the note */
+      .note-swatch-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .note-swatch-label {
+        font-family: var(--font-ui);
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: rgba(0, 0, 0, 0.35);
+        margin-right: 2px;
+      }
+      .swatch {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2.5px solid transparent;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .swatch.selected {
+        border-color: rgba(0, 0, 0, 0.55);
+        box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.7);
+      }
+      .swatch-yellow {
+        background: var(--yellow);
+      }
+      .swatch-pink {
+        background: var(--pink);
+      }
+      .swatch-blue {
+        background: var(--blue);
+      }
+      .swatch-green {
+        background: var(--green);
+      }
+      .swatch-orange {
+        background: var(--orange);
+      }
+      .swatch-purple {
+        background: var(--purple);
+      }
+
+      .create-note-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: 10px;
+        border-top: 1.5px solid rgba(0, 0, 0, 0.1);
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .create-note-actions {
+        display: flex;
+        gap: 8px;
+        margin-left: auto;
+      }
+
+      /* ---- Section separator ---- */
+      .section-sep {
+        max-width: 1280px;
+        margin: 0 auto 8px;
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .section-sep::before,
+      .section-sep::after {
+        content: "";
+        flex: 1;
+        height: 2px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--cork-bg),
+          transparent
+        );
+        border-radius: 2px;
+      }
+      .section-sep span {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #b08050;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ======================================================
+       HEADER
+       ====================================================== -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-logo">
+          <span class="logo-icon">📌</span>
+          <div>
+            <h1 class="logo-title">AI Complaint Board</h1>
+            <p class="logo-sub">A place to vent about AI</p>
+          </div>
+        </div>
+        <nav class="header-nav">
+          <a href="index.html" class="nav-link" style="text-decoration: none"
+            >← Board</a
+          >
+          <span class="nav-link">Top Notes</span>
+          <span class="nav-link">Recent</span>
+          <button type="button" class="btn-post">+ Post Note</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Views sub-nav -->
+    <nav class="views-nav" aria-label="View prototypes">
+      <div class="views-nav-inner">
+        <span class="view-label">Views:</span>
+        <a href="#view-post" class="view-tab active">1 — Single Post</a>
+        <a href="#view-create" class="view-tab">2 — Create Note</a>
+        <a href="#view-edit" class="view-tab">3 — Edit Note</a>
+        <a href="#view-delete" class="view-tab">4 — Delete Note</a>
+      </div>
+    </nav>
+
+    <main>
+      <!-- ====================================================
+         VIEW 1 — SINGLE POST
+         ==================================================== -->
+      <section id="view-post" class="view-section">
+        <div class="view-section-label">
+          <h2>Single Post</h2>
+        </div>
+        <p class="view-desc">
+          Clicking any note enlarges the note view over the board with the date,
+          title, description, and votes visible. The note owner sees Edit and
+          Delete options.
+        </p>
+
+        <div class="viewport-frame">
+          <div class="viewport-scene">
+            <div class="scene-bg">
+              <div class="scene-bg-header"></div>
+              <div class="scene-bg-board">
+                <div class="bg-note note-yellow">ChatGPT Wrote My Thesis</div>
+                <div class="bg-note note-pink">AI Replaced Our Writers</div>
+                <div class="bg-note note-blue">Resume Screener Rejected Me</div>
+                <div class="bg-note note-green">AI Art Won the Festival</div>
+                <div class="bg-note note-orange">Useless AI Assistants</div>
+                <div class="bg-note note-purple">
+                  AI Diagnosed Horse Disease
+                </div>
+                <div class="bg-note note-yellow" style="opacity: 0.3">
+                  AI Tutors Can't Do Math
+                </div>
+              </div>
+            </div>
+
+            <div class="scene-overlay">
+              <div
+                class="note-modal note-yellow"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="post-title"
+              >
+                <button class="note-modal-close" aria-label="Close">✕</button>
+                <span class="note-modal-tag">Complaint · 28 May 2026</span>
+                <h2 class="note-modal-title" id="post-title">
+                  ChatGPT Wrote My Thesis
+                </h2>
+                <p class="note-modal-body">
+                  ChatGPT wrote my entire thesis and now I don't know what I
+                  actually believe anymore. I defended ideas I barely
+                  understand. My supervisor said it was my best work. That's the
+                  worst part.
+                </p>
+                <div class="note-modal-footer">
+                  <div class="note-votes">
+                    <span class="vote-btn vote-up"
+                      >👍 <span class="vote-count">312</span></span
+                    >
+                    <span class="vote-btn vote-down"
+                      >👎 <span class="vote-count">14</span></span
+                    >
+                  </div>
+                  <div class="note-modal-actions">
+                    <button type="button" class="btn-edit-sm">✏️ Edit</button>
+                    <button type="button" class="btn-delete-sm">
+                      🗑 Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-sep"><span>View 2</span></div>
+
+      <!-- ====================================================
+         VIEW 2 — CREATE NOTE
+         ==================================================== -->
+      <section id="view-create" class="view-section">
+        <div class="view-section-label">
+          <h2>Create Note</h2>
+        </div>
+        <p class="view-desc">
+          Clicking "+ Post Note" opens a blank sticky note to write on. The user
+          can write a title and description then choose a color swatch before
+          posting the note.
+        </p>
+
+        <div class="viewport-frame">
+          <div class="viewport-scene">
+            <div class="scene-bg">
+              <div class="scene-bg-header"></div>
+              <div class="scene-bg-board">
+                <div class="bg-note note-pink">AI Replaced Our Writers</div>
+                <div class="bg-note note-green">AI Art Won the Festival</div>
+                <div class="bg-note note-orange">Useless AI Assistants</div>
+                <div class="bg-note note-purple">
+                  AI Diagnosed Horse Disease
+                </div>
+                <div class="bg-note note-yellow">Same 5 Songs Forever</div>
+              </div>
+            </div>
+
+            <div class="scene-overlay">
+              <div
+                class="create-note-modal note-yellow"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="create-title"
+              >
+                <button class="note-modal-close" aria-label="Close">✕</button>
+                <span class="create-note-hint">New complaint</span>
+
+                <input
+                  class="note-input note-input-title"
+                  type="text"
+                  id="create-title"
+                  placeholder="Give it a title…"
+                  value=""
+                  readonly
+                />
+
+                <div
+                  class="note-input note-input-body"
+                  style="
+                    color: rgba(0, 0, 0, 0.35);
+                    font-style: italic;
+                    font-weight: 400;
+                  "
+                >
+                  What happened? Tell the board…
+                </div>
+
+                <div class="create-note-footer">
+                  <div class="note-swatch-row">
+                    <span class="note-swatch-label">Color:</span>
+                    <span
+                      class="swatch swatch-yellow selected"
+                      title="Yellow"
+                    ></span>
+                    <span class="swatch swatch-pink" title="Pink"></span>
+                    <span class="swatch swatch-blue" title="Blue"></span>
+                    <span class="swatch swatch-green" title="Green"></span>
+                    <span class="swatch swatch-orange" title="Orange"></span>
+                    <span class="swatch swatch-purple" title="Purple"></span>
+                  </div>
+                  <div class="create-note-actions">
+                    <button type="button" class="btn-note-cancel">
+                      Cancel
+                    </button>
+                    <button type="button" class="btn-note-save">📌 Post</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-sep"><span>View 3</span></div>
+
+      <!-- ====================================================
+         VIEW 3 — EDIT NOTE
+         ==================================================== -->
+      <section id="view-edit" class="view-section">
+        <div class="view-section-label">
+          <h2>Edit Note</h2>
+        </div>
+        <p class="view-desc">
+          Clicking Edit on an owned note re-opens it as an enlarged sticky note
+          with editable fields.
+        </p>
+
+        <div class="viewport-frame">
+          <div class="viewport-scene">
+            <div class="scene-bg">
+              <div class="scene-bg-header"></div>
+              <div class="scene-bg-board">
+                <!-- Hero note visible behind -->
+                <div class="bg-note bg-note-hero note-yellow">
+                  ChatGPT Wrote My Thesis
+                </div>
+                <div class="bg-note note-pink">AI Replaced Our Writers</div>
+                <div class="bg-note note-blue">Resume Screener Rejected Me</div>
+                <div class="bg-note note-green">AI Art Won the Festival</div>
+                <div class="bg-note note-orange">Useless AI Assistants</div>
+              </div>
+            </div>
+
+            <div class="scene-overlay">
+              <div
+                class="note-modal note-yellow"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="edit-title"
+              >
+                <button class="note-modal-close" aria-label="Close">✕</button>
+                <span class="note-modal-tag">Editing your note</span>
+
+                <input
+                  class="note-input note-input-title"
+                  type="text"
+                  id="edit-title"
+                  value="ChatGPT Wrote My Thesis"
+                  readonly
+                />
+
+                <div class="note-input note-input-body">
+                  ChatGPT wrote my entire thesis and now I don't know what I
+                  actually believe anymore. I defended ideas I barely
+                  understand.
+                </div>
+
+                <div class="note-modal-edit-footer">
+                  <div class="note-swatch-row">
+                    <span class="note-swatch-label">Color:</span>
+                    <span
+                      class="swatch swatch-yellow selected"
+                      title="Yellow"
+                    ></span>
+                    <span class="swatch swatch-pink" title="Pink"></span>
+                    <span class="swatch swatch-blue" title="Blue"></span>
+                    <span class="swatch swatch-green" title="Green"></span>
+                    <span class="swatch swatch-orange" title="Orange"></span>
+                    <span class="swatch swatch-purple" title="Purple"></span>
+                  </div>
+                  <div class="note-edit-actions">
+                    <button type="button" class="btn-note-cancel">
+                      Cancel
+                    </button>
+                    <button type="button" class="btn-note-save">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-sep"><span>View 4</span></div>
+
+      <!-- ====================================================
+         VIEW 4 — DELETE NOTE
+         ==================================================== -->
+      <section id="view-delete" class="view-section">
+        <div class="view-section-label">
+          <h2>Delete Note</h2>
+        </div>
+        <p class="view-desc">
+          Clicking Delete on an owned note opens the same enlarged sticky note
+          asking for confirmation.
+        </p>
+
+        <div class="viewport-frame">
+          <div class="viewport-scene">
+            <div class="scene-bg">
+              <div class="scene-bg-header"></div>
+              <div class="scene-bg-board">
+                <div class="bg-note bg-note-hero note-yellow">
+                  ChatGPT Wrote My Thesis
+                </div>
+                <div class="bg-note note-pink">AI Replaced Our Writers</div>
+                <div class="bg-note note-blue">Resume Screener Rejected Me</div>
+                <div class="bg-note note-green">AI Art Won the Festival</div>
+                <div class="bg-note note-orange">Useless AI Assistants</div>
+              </div>
+            </div>
+
+            <div class="scene-overlay">
+              <div
+                class="note-modal note-yellow"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="delete-title"
+              >
+                <button class="note-modal-close" aria-label="Close">✕</button>
+                <div class="note-delete-body">
+                  <span class="delete-icon">🗑️</span>
+                  <h2 class="delete-question" id="delete-title">
+                    Remove "ChatGPT Wrote My Thesis"?
+                  </h2>
+                  <p class="delete-subtext">This cannot be undone.</p>
+                  <div class="delete-note-actions">
+                    <button type="button" class="btn-keep">Keep it</button>
+                    <button type="button" class="btn-confirm-delete">
+                      Yes, delete it
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ======================================================
+       FOOTER
+       ====================================================== -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-col">
+          <strong>AI Complaint Board</strong>
+          <p>
+            A community space to voice concerns about artificial intelligence.
+          </p>
+        </div>
+        <div class="footer-col">
+          <strong>Team</strong>
+          <p>Mallory Whitt · Timo Brand · Vladyslav Zaplitnyi</p>
+          <p class="footer-dim">THWS · Frontend Systems · 2026</p>
+        </div>
+        <div class="footer-col footer-dim">
+          <p>Frontend-only · Mock data · No backend</p>
+        </div>
+      </div>
+      <div class="footer-bottom">© 2026 AI Complaint Board</div>
+    </footer>
+
+    <script>
+      // Highlight active tab on scroll only — no other functionality
+      const sections = document.querySelectorAll(".view-section");
+      const tabs = document.querySelectorAll(".view-tab");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              tabs.forEach((t) => t.classList.remove("active"));
+              const active = document.querySelector(
+                `.view-tab[href="#${entry.target.id}"]`,
+              );
+              if (active) active.classList.add("active");
+            }
+          });
+        },
+        { rootMargin: "-35% 0px -60% 0px" },
+      );
+      sections.forEach((s) => observer.observe(s));
+    </script>
+  </body>
+</html>
