@@ -26,6 +26,10 @@ The bulletin board is built for the general public, with a focus on younger user
 - Keyword search across all notes
 - Sorting and filtering by recency, popularity, or topic
 
+## Design Document
+
+The first application design document is available at [docs/design-document.md](docs/design-draft-portfolio-submission.md).
+
 ## Backend
 
 We plan to mock our data for the backend and will not implement a real data processing system.
