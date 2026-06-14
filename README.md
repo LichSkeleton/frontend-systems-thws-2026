@@ -1,5 +1,33 @@
 # AI Complaint Board
 
+## Getting Started
+
+This project is a **React** app built with [Vite](https://vitejs.dev/).
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+
+### Project Structure
+
+- `src/pages/HomePage.jsx` — main board screen
+- `src/pages/ViewsPage.jsx` — screen prototypes (single post, create, edit, delete)
+- `src/components/` — reusable UI components
+- `src/data/notes.js` — mock note data
+- `src/style.css` — shared visual styling
+- `src/styles/views.css` — views page styling
+
 ## Team Members
 
 | Name | Email | ID |

@@ -1,10 +1,4 @@
-/* ============================================================
-   AI Complaint Board — UI shell (desktop layout only)
-   Teammates: wire sorting, voting, pagination, and create-note.
-   ============================================================ */
-
-// --------------- MOCK DATA ---------------
-const NOTES = [
+export const NOTES = [
   { id: 1, title: "ChatGPT Wrote My Thesis", description: "ChatGPT wrote my entire thesis and now I don't know what I actually believe anymore. I defended ideas I barely understand.", color: "yellow", up: 312, down: 14, date: "2026-05-28" },
   { id: 2, title: "AI Replaced Our Writers", description: "My boss replaced our whole content team with an AI that produces 200 articles a day. None of them are readable or fact-checked.", color: "pink", up: 287, down: 9, date: "2026-05-25" },
   { id: 3, title: "Resume Screener Rejected Me", description: "I got rejected from a job because an AI resume screener couldn't parse my creative CV format. A human never saw my application.", color: "blue", up: 264, down: 11, date: "2026-05-20" },
@@ -37,59 +31,5 @@ const NOTES = [
   { id: 30, title: "AI for AI Startup", description: "The AI startup my friend works at just pivoted for the 6th time in two years. Current direction: 'AI for AI'. Nobody knows what that means.", color: "purple", up: 28, down: 2, date: "2026-04-18" },
 ];
 
-const DISPLAY_NOTES = NOTES.slice(0, 6);
-const TILTS = [-3, 2, -2, 3, -1.5, 2.5];
-
-function formatDate(dateStr) {
-  return new Date(dateStr).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-}
-
-function escapeHtml(str) {
-  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
-
-function votesHtml(note) {
-  return `
-    <div class="note-votes">
-      <span class="vote-btn vote-up">👍 <span class="vote-count">${note.up}</span></span>
-      <span class="vote-btn vote-down">👎 <span class="vote-count">${note.down}</span></span>
-    </div>`;
-}
-
-function createFeaturedNote(note, rank, tiltDeg) {
-  const el = document.createElement("article");
-  el.className = `sticky-note note-${note.color}`;
-  el.style.transform = `rotate(${tiltDeg}deg)`;
-  el.innerHTML = `
-    <span class="note-rank">#${rank}</span>
-    <h3 class="note-title"><span class="note-title-link">${escapeHtml(note.title)}</span></h3>
-    <div class="note-footer">
-      ${votesHtml(note)}
-      <span class="note-date">${formatDate(note.date)}</span>
-    </div>`;
-  return el;
-}
-
-function createRecentCard(note) {
-  const el = document.createElement("div");
-  el.className = `recent-card note-${note.color}`;
-  el.innerHTML = `
-    <h3 class="card-title"><span class="note-title-link">${escapeHtml(note.title)}</span></h3>
-    <div class="card-footer">
-      ${votesHtml(note)}
-      <span class="note-date">${formatDate(note.date)}</span>
-    </div>`;
-  return el;
-}
-
-function renderShell() {
-  const popularBoard = document.getElementById("popularBoard");
-  const recentBoard = document.getElementById("recentBoard");
-
-  DISPLAY_NOTES.forEach((note, i) => {
-    popularBoard.appendChild(createFeaturedNote(note, i + 1, TILTS[i]));
-    recentBoard.appendChild(createRecentCard(note));
-  });
-}
-
-renderShell();
+export const DISPLAY_NOTES = NOTES.slice(0, 6);
+export const TILTS = [-3, 2, -2, 3, -1.5, 2.5];
