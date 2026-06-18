@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function Header({ variant = "home" }) {
+export default function Header({ variant = "home", onCreateNote }) {
   return (
     <header className="site-header">
       <div className="header-inner">
@@ -18,14 +18,18 @@ export default function Header({ variant = "home" }) {
             </Link>
           ) : (
             <>
-              <span className="nav-link">Top Notes</span>
-              <span className="nav-link">Recent</span>
+              <a href="#top-section" className="nav-link">
+                Top Notes
+              </a>
+              <a href="#recent-section" className="nav-link">
+                Recent
+              </a>
               <Link to="/views" className="nav-link" style={{ textDecoration: "none" }}>
                 Views →
               </Link>
             </>
           )}
-          <button type="button" className="btn-post">
+          <button type="button" className="btn-post" onClick={onCreateNote}>
             + Post Note
           </button>
         </nav>

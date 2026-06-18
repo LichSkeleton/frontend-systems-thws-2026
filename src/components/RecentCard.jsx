@@ -1,9 +1,9 @@
 import { formatDate } from "../utils/formatDate";
 import VoteButtons from "./VoteButtons";
 
-export default function RecentCard({ note }) {
+export default function RecentCard({ note, onClick }) {
   return (
-    <div className={`recent-card note-${note.color}`}>
+    <article className={`recent-card note-${note.color}`} onClick={onClick}>
       <h3 className="card-title">
         <span className="note-title-link">{note.title}</span>
       </h3>
@@ -11,6 +11,6 @@ export default function RecentCard({ note }) {
         <VoteButtons up={note.up} down={note.down} />
         <span className="note-date">{formatDate(note.date)}</span>
       </div>
-    </div>
+    </article>
   );
 }

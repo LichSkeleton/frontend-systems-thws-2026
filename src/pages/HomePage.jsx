@@ -3,11 +3,30 @@ import Footer from "../components/Footer";
 import StickyNote from "../components/StickyNote";
 import RecentCard from "../components/RecentCard";
 import { DISPLAY_NOTES, TILTS } from "../data/notes";
+import {
+  CreateNoteOverlay,
+  DeleteNoteOverlay,
+  EditNoteOverlay,
+  SinglePostOverlay,
+} from "./ViewsPage.jsx";
+import { useState } from "react";
 
 export default function HomePage() {
+  const [selectedNote, setSelectedNote] = useState(null);
+  const [activeView, setActiveView] = useState(null);
+
+  const handleSingleViewClick = (note) => {
+    setSelectedNote(note);
+    setActiveView("single");
+  };
+
+  const closeView = () => {
+    setActiveView(null);
+  };
+
   return (
     <>
-      <Header variant="home" />
+      <Header variant="home" onCreateNote={() => setActiveView("create")} />
       <main style={{ flex: 1 }}>
         <section id="top-section" className="board-section">
           <div className="section-heading">
@@ -21,8 +40,10 @@ export default function HomePage() {
                 note={note}
                 rank={i + 1}
                 tiltDeg={TILTS[i]}
+                onClick={() => handleSingleViewClick(note)}
               />
             ))}
+
           </div>
         </section>
 
@@ -37,7 +58,11 @@ export default function HomePage() {
           </div>
           <div className="recent-grid" id="recentBoard">
             {DISPLAY_NOTES.map((note) => (
-              <RecentCard key={note.id} note={note} />
+              <RecentCard
+                key={note.id}
+                note={note}
+                onClick={() => handleSingleViewClick(note)}
+              />
             ))}
           </div>
           <div className="pagination">
@@ -52,6 +77,21 @@ export default function HomePage() {
         </section>
       </main>
       <Footer />
+      {activeView === "single" && (
+        <SinglePostOverlay
+          note={selectedNote}
+          onClose={closeView}
+          onEdit={() => setActiveView("edit")}
+          onDelete={() => setActiveView("delete")}
+        />
+      )}
+      {activeView === "create" && <CreateNoteOverlay onClose={closeView} />}
+      {activeView === "edit" && (
+        <EditNoteOverlay note={selectedNote} onClose={closeView} />
+      )}
+      {activeView === "delete" && (
+        <DeleteNoteOverlay note={selectedNote} onClose={closeView} />
+      )}
     </>
   );
 }

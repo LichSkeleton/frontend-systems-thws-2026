@@ -1,9 +1,9 @@
 import { formatDate } from "../utils/formatDate";
 import VoteButtons from "./VoteButtons";
 
-export default function StickyNote({ note, rank, tiltDeg }) {
+export default function StickyNote({ note, rank, tiltDeg, onClick }) {
   return (
-    <article
+    <article onClick={onClick}
       className={`sticky-note note-${note.color}`}
       style={{ transform: `rotate(${tiltDeg}deg)` }}
     >
