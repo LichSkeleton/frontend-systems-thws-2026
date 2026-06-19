@@ -8,7 +8,7 @@ import {
   DeleteNoteOverlay,
   EditNoteOverlay,
   SinglePostOverlay,
-} from "./ViewsPage.jsx";
+} from "../components/NoteOverlays.jsx";
 import { useState } from "react";
 
 export default function HomePage() {
