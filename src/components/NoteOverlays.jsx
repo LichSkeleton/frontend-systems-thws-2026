@@ -155,7 +155,7 @@ export function EditNoteOverlay({ note, onClose }) {
   );
 }
 
-export function DeleteNoteOverlay({ note, onClose }) {
+export function DeleteNoteOverlay({ note, onClose, onConfirm }) {
   if (!note) return null;
 
   return (
@@ -180,7 +180,7 @@ export function DeleteNoteOverlay({ note, onClose }) {
             <button type="button" className="btn-keep" onClick={onClose}>
               Keep it
             </button>
-            <button type="button" className="btn-confirm-delete" onClick={onClose}>
+            <button type="button" className="btn-confirm-delete" onClick={() => onConfirm(note.id)}>
               Yes, delete it
             </button>
           </div>

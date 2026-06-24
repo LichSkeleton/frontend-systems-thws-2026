@@ -30,6 +30,11 @@ export default function HomePage() {
     closeView();
   };
 
+  const handleDelete = (id) => {
+    setNotes((prev) => prev.filter((n) => n.id !== id));
+    closeView();
+  };
+
   return (
     <>
       <Header variant="home" onCreateNote={() => setActiveView("create")} />
@@ -96,7 +101,7 @@ export default function HomePage() {
         <EditNoteOverlay note={selectedNote} onClose={closeView} />
       )}
       {activeView === "delete" && (
-        <DeleteNoteOverlay note={selectedNote} onClose={closeView} />
+        <DeleteNoteOverlay note={selectedNote} onClose={closeView} onConfirm={handleDelete} />
       )}
     </>
   );
