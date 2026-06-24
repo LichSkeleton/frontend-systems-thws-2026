@@ -2,7 +2,7 @@ import { useState } from "react";
 import VoteButtons from "./VoteButtons";
 import { formatDate } from "../utils/formatDate";
 
-export function SinglePostOverlay({ note, onClose, onEdit, onDelete, onVoteUp, onVoteDown }) {
+export function SinglePostOverlay({ note, onClose, onEdit, onDelete, onVote }) {
   if (!note) return null;
 
   return (
@@ -23,12 +23,7 @@ export function SinglePostOverlay({ note, onClose, onEdit, onDelete, onVoteUp, o
         </h2>
         <p className="note-modal-body">{note.description}</p>
         <div className="note-modal-footer">
-          <VoteButtons
-            up={note.up}
-            down={note.down}
-            onVoteUp={onVoteUp}
-            onVoteDown={onVoteDown}
-          />
+          <VoteButtons up={note.up} down={note.down} onVote={onVote} />
           <span className="note-date">{formatDate(note.date)}</span>
           <div className="note-modal-actions">
             <button type="button" className="btn-edit-sm" onClick={onEdit}>
@@ -120,22 +115,25 @@ export function CreateNoteOverlay({ onClose, onAdd }) {
 export function EditNoteOverlay({ note, onClose, onSave }) {
   const [title, setTitle] = useState(note?.title ?? "");
   const [description, setDescription] = useState(note?.description ?? "");
+  const [color, setColor] = useState(note?.color ?? "yellow");
 
   if (!note) return null;
 
   const handleSave = () => {
     if (!title.trim()) return;
-    onSave({
-      ...note,
-      title: title.trim(),
-      description: description.trim(),
-    });
+    onSave({ ...note, title: title.trim(), description: description.trim(), color });
+  };
+
+  const autoResize = (el) => {
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = el.scrollHeight + "px";
   };
 
   return (
     <div className="live-view-overlay" role="presentation" onMouseDown={onClose}>
       <div
-        className={`note-modal note-${note.color}`}
+        className={`note-modal note-${color}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={`edit-note-title-${note.id}`}
@@ -155,12 +153,21 @@ export function EditNoteOverlay({ note, onClose, onSave }) {
         <textarea
           className="note-input note-input-body"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          style={{ overflow: "hidden" }}
+          ref={(el) => autoResize(el)}
+          onChange={(e) => { setDescription(e.target.value); autoResize(e.target); }}
         />
         <div className="note-modal-edit-footer">
           <div className="note-swatch-row">
             <span className="note-swatch-label">Color:</span>
-            <span className={`swatch swatch-${note.color} selected`} title={note.color} />
+            {COLORS.map((c) => (
+              <span
+                key={c}
+                className={`swatch swatch-${c}${color === c ? " selected" : ""}`}
+                title={c}
+                onClick={() => setColor(c)}
+              />
+            ))}
           </div>
           <div className="note-edit-actions">
             <button type="button" className="btn-note-cancel" onClick={onClose}>

@@ -202,7 +202,7 @@ body  {
 .sticky-note {
   position: relative;
   width: clamp(160px, 17vw, 210px);
-  min-height: 160px;
+  min-height: clamp(160px, 17vw, 210px);
   padding: 18px 16px 16px;
   border-radius: 2px;
   font-family: var(--font-hand);
@@ -217,6 +217,9 @@ body  {
   flex-direction: column;
   gap: 10px;
 }
+
+.sticky-note:nth-child(5n + 2) { min-height: calc(clamp(160px, 17vw, 210px) * 0.75); }
+.sticky-note:nth-child(7n + 4) { min-height: calc(clamp(160px, 17vw, 210px) * 0.7); }
 
 /* Bottom-right paper fold */
 .sticky-note::after {
@@ -243,12 +246,19 @@ body  {
 
 .note-title,
 .card-title {
-  flex: 1;
   margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+}
+
+.note-preview {
+  font-size: 0.88rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: rgba(0, 0, 0, 0.65);
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
 }
 
 .note-title-link {
@@ -317,11 +327,31 @@ body  {
   border-color: #dc2626;
 }
 
+.vote-up.voted {
+  background: rgba(22,163,74,0.4);
+  border-color: #16a34a;
+  color: #14532d;
+}
+
+.vote-down.voted {
+  background: rgba(220,38,38,0.3);
+  border-color: #dc2626;
+  color: #7f1d1d;
+}
+
 .vote-count {
   font-size: 0.95rem;
   font-weight: 800;
   min-width: 18px;
   text-align: left;
+}
+
+.vote-net {
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: var(--font-ui);
+  color: rgba(0, 0, 0, 0.55);
+  white-space: nowrap;
 }
 
 .note-date {
@@ -330,6 +360,25 @@ body  {
   white-space: nowrap;
   font-family: var(--font-ui);
   margin-top: 2px;
+}
+
+.board-ribbon {
+  flex-basis: 100%;
+  width: 100%;
+  background: #2d1810;
+  color: var(--yellow);
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+  letter-spacing: 0.5px;
+}
+
+.board-ribbon + .board-ribbon {
+  margin-top: 12px;
 }
 
 /* ============================================================

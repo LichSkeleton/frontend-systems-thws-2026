@@ -18,12 +18,6 @@ export default function Header({ variant = "home", onCreateNote }) {
             </Link>
           ) : (
             <>
-              <a href="#top-section" className="nav-link">
-                Top Notes
-              </a>
-              <a href="#recent-section" className="nav-link">
-                Recent
-              </a>
               <Link to="/views" className="nav-link" style={{ textDecoration: "none" }}>
                 Views →
               </Link>

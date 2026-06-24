@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import VoteButtons from "../components/VoteButtons";
-import { DISPLAY_NOTES } from "../data/notes";
+import { NOTES } from "../data/notes";
 import { formatDate } from "../utils/formatDate";
 import "../styles/views.css";
 
@@ -32,8 +32,8 @@ function ViewsNav({ activeId }) {
   );
 }
 function SinglePostView({ note, notes }) {
-  const activeNote = note ?? DISPLAY_NOTES[0];
-  const backgroundNotes = notes ?? DISPLAY_NOTES;
+  const activeNote = note ?? NOTES[0];
+  const backgroundNotes = notes ?? NOTES.slice(0, 6);
 
   return (
     <section id="view-post" className="view-section">

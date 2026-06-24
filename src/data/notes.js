@@ -31,5 +31,5 @@ export const NOTES = [
   { id: 30, title: "AI for AI Startup", description: "The AI startup my friend works at just pivoted for the 6th time in two years. Current direction: 'AI for AI'. Nobody knows what that means.", color: "purple", up: 28, down: 2, date: "2026-04-18" },
 ];
 
-export const DISPLAY_NOTES = NOTES.slice(0, 6);
-export const TILTS = [-3, 2, -2, 3, -1.5, 2.5];
+export const TILTS = [-3, 2, -2, 3, -1.5];
+export const RECENT_TILTS = [-1, 1.5, -2, 0.5, -1.5, 2, -0.5, 1, -2, 1.5];
