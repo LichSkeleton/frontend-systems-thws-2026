@@ -35,6 +35,14 @@ export default function HomePage() {
     closeView();
   };
 
+  const handleVote = (id, direction) => {
+    setNotes((prev) =>
+      prev.map((note) =>
+        note.id === id ? { ...note, [direction]: note[direction] + 1 } : note
+      )
+    );
+  };
+
   return (
     <>
       <Header variant="home" onCreateNote={() => setActiveView("create")} />
@@ -52,6 +60,8 @@ export default function HomePage() {
                 rank={i + 1}
                 tiltDeg={TILTS[i]}
                 onClick={() => handleSingleViewClick(note)}
+                onVoteUp={() => handleVote(note.id, "up")}
+                onVoteDown={() => handleVote(note.id, "down")}
               />
             ))}
 
@@ -73,6 +83,8 @@ export default function HomePage() {
                 key={note.id}
                 note={note}
                 onClick={() => handleSingleViewClick(note)}
+                onVoteUp={() => handleVote(note.id, "up")}
+                onVoteDown={() => handleVote(note.id, "down")}
               />
             ))}
           </div>
@@ -94,6 +106,8 @@ export default function HomePage() {
           onClose={closeView}
           onEdit={() => setActiveView("edit")}
           onDelete={() => setActiveView("delete")}
+          onVoteUp={() => handleVote(selectedNoteId, "up")}
+          onVoteDown={() => handleVote(selectedNoteId, "down")}
         />
       )}
       {activeView === "create" && <CreateNoteOverlay onClose={closeView} onAdd={handleAdd} />}

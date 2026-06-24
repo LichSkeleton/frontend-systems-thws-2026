@@ -2,7 +2,7 @@ import { useState } from "react";
 import VoteButtons from "./VoteButtons";
 import { formatDate } from "../utils/formatDate";
 
-export function SinglePostOverlay({ note, onClose, onEdit, onDelete }) {
+export function SinglePostOverlay({ note, onClose, onEdit, onDelete, onVoteUp, onVoteDown }) {
   if (!note) return null;
 
   return (
@@ -23,7 +23,12 @@ export function SinglePostOverlay({ note, onClose, onEdit, onDelete }) {
         </h2>
         <p className="note-modal-body">{note.description}</p>
         <div className="note-modal-footer">
-          <VoteButtons up={note.up} down={note.down} />
+          <VoteButtons
+            up={note.up}
+            down={note.down}
+            onVoteUp={onVoteUp}
+            onVoteDown={onVoteDown}
+          />
           <span className="note-date">{formatDate(note.date)}</span>
           <div className="note-modal-actions">
             <button type="button" className="btn-edit-sm" onClick={onEdit}>
