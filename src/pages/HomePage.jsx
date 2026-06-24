@@ -35,6 +35,13 @@ export default function HomePage() {
     closeView();
   };
 
+  const handleSave = (updatedNote) => {
+    setNotes((prev) =>
+      prev.map((note) => (note.id === updatedNote.id ? updatedNote : note))
+    );
+    closeView();
+  };
+
   const handleVote = (id, direction) => {
     setNotes((prev) =>
       prev.map((note) =>
@@ -112,7 +119,7 @@ export default function HomePage() {
       )}
       {activeView === "create" && <CreateNoteOverlay onClose={closeView} onAdd={handleAdd} />}
       {activeView === "edit" && (
-        <EditNoteOverlay note={selectedNote} onClose={closeView} />
+        <EditNoteOverlay note={selectedNote} onClose={closeView} onSave={handleSave} />
       )}
       {activeView === "delete" && (
         <DeleteNoteOverlay note={selectedNote} onClose={closeView} onConfirm={handleDelete} />

@@ -117,8 +117,20 @@ export function CreateNoteOverlay({ onClose, onAdd }) {
   );
 }
 
-export function EditNoteOverlay({ note, onClose }) {
+export function EditNoteOverlay({ note, onClose, onSave }) {
+  const [title, setTitle] = useState(note?.title ?? "");
+  const [description, setDescription] = useState(note?.description ?? "");
+
   if (!note) return null;
+
+  const handleSave = () => {
+    if (!title.trim()) return;
+    onSave({
+      ...note,
+      title: title.trim(),
+      description: description.trim(),
+    });
+  };
 
   return (
     <div className="live-view-overlay" role="presentation" onMouseDown={onClose}>
@@ -137,10 +149,14 @@ export function EditNoteOverlay({ note, onClose }) {
           className="note-input note-input-title"
           type="text"
           id={`edit-note-title-${note.id}`}
-          defaultValue={note.title}
-          readOnly
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
-        <div className="note-input note-input-body">{note.description}</div>
+        <textarea
+          className="note-input note-input-body"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
         <div className="note-modal-edit-footer">
           <div className="note-swatch-row">
             <span className="note-swatch-label">Color:</span>
@@ -150,7 +166,7 @@ export function EditNoteOverlay({ note, onClose }) {
             <button type="button" className="btn-note-cancel" onClick={onClose}>
               Cancel
             </button>
-            <button type="button" className="btn-note-save" onClick={onClose}>
+            <button type="button" className="btn-note-save" onClick={handleSave}>
               Save
             </button>
           </div>
