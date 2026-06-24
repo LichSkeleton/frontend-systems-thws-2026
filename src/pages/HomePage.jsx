@@ -1,8 +1,7 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import StickyNote from "../components/StickyNote";
-import RecentCard from "../components/RecentCard";
-import { NOTES, TILTS } from "../data/notes";
+import { NOTES, TILTS, RECENT_TILTS } from "../data/notes";
 import {
   CreateNoteOverlay,
   DeleteNoteOverlay,
@@ -42,11 +41,15 @@ export default function HomePage() {
     closeView();
   };
 
-  const handleVote = (id, direction) => {
-    setNotes((prev) =>
-      prev.map((note) =>
-        note.id === id ? { ...note, [direction]: note[direction] + 1 } : note
-      )
+  const handleVote = (id, next, prev) => {
+    setNotes((notes) =>
+      notes.map((note) => {
+        if (note.id !== id) return note;
+        const updated = { ...note };
+        if (next) updated[next] = note[next] + 1;
+        if (prev) updated[prev] = note[prev] - 1;
+        return updated;
+      })
     );
   };
 
@@ -54,55 +57,28 @@ export default function HomePage() {
     <>
       <Header variant="home" onCreateNote={() => setActiveView("create")} />
       <main style={{ flex: 1 }}>
-        <section id="top-section" className="board-section">
-          <div className="section-heading">
-            <h2>Top Complaints</h2>
-            <span className="section-sub">Most popular this week</span>
-          </div>
-          <div className="corkboard" id="popularBoard">
-            {notes.slice(0, 5).map((note, i) => (
+        <section className="board-section">
+          <div className="corkboard" id="mainBoard">
+            <div className="board-ribbon">Top Complaints</div>
+            {[...notes].sort((a, b) => (b.up - b.down) - (a.up - a.down)).slice(0, 5).map((note, i) => (
               <StickyNote
                 key={note.id}
                 note={note}
-                rank={i + 1}
                 tiltDeg={TILTS[i]}
                 onClick={() => handleSingleViewClick(note)}
-                onVoteUp={() => handleVote(note.id, "up")}
-                onVoteDown={() => handleVote(note.id, "down")}
+                onVote={(next, prev) => handleVote(note.id, next, prev)}
               />
             ))}
-
-          </div>
-        </section>
-
-        <div className="divider">
-          <span>Recent Notes</span>
-        </div>
-
-        <section id="recent-section" className="board-section">
-          <div className="section-heading">
-            <h2>Recent Posts</h2>
-            <span className="section-sub">Freshly pinned to the board</span>
-          </div>
-          <div className="recent-grid" id="recentBoard">
-            {notes.map((note) => (
-              <RecentCard
+            <div className="board-ribbon">Recent Posts</div>
+            {[...notes].sort((a, b) => new Date(b.date) - new Date(a.date)).map((note, i) => (
+              <StickyNote
                 key={note.id}
                 note={note}
+                tiltDeg={RECENT_TILTS[i % RECENT_TILTS.length]}
                 onClick={() => handleSingleViewClick(note)}
-                onVoteUp={() => handleVote(note.id, "up")}
-                onVoteDown={() => handleVote(note.id, "down")}
+                onVote={(next, prev) => handleVote(note.id, next, prev)}
               />
             ))}
-          </div>
-          <div className="pagination">
-            <button type="button" className="page-btn disabled" disabled>
-              ← Prev
-            </button>
-            <span className="page-info">Page 1 of 1</span>
-            <button type="button" className="page-btn disabled" disabled>
-              Next →
-            </button>
           </div>
         </section>
       </main>
@@ -113,8 +89,7 @@ export default function HomePage() {
           onClose={closeView}
           onEdit={() => setActiveView("edit")}
           onDelete={() => setActiveView("delete")}
-          onVoteUp={() => handleVote(selectedNoteId, "up")}
-          onVoteDown={() => handleVote(selectedNoteId, "down")}
+          onVote={(next, prev) => handleVote(selectedNoteId, next, prev)}
         />
       )}
       {activeView === "create" && <CreateNoteOverlay onClose={closeView} onAdd={handleAdd} />}
