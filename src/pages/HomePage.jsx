@@ -25,6 +25,11 @@ export default function HomePage() {
     setActiveView("single");
   };
 
+  const handleAdd = (newNote) => {
+    setNotes((prev) => [newNote, ...prev]);
+    closeView();
+  };
+
   return (
     <>
       <Header variant="home" onCreateNote={() => setActiveView("create")} />
@@ -86,7 +91,7 @@ export default function HomePage() {
           onDelete={() => setActiveView("delete")}
         />
       )}
-      {activeView === "create" && <CreateNoteOverlay onClose={closeView} />}
+      {activeView === "create" && <CreateNoteOverlay onClose={closeView} onAdd={handleAdd} />}
       {activeView === "edit" && (
         <EditNoteOverlay note={selectedNote} onClose={closeView} />
       )}

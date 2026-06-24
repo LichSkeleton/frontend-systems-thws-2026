@@ -1,3 +1,4 @@
+import { useState } from "react";
 import VoteButtons from "./VoteButtons";
 import { formatDate } from "../utils/formatDate";
 
@@ -38,11 +39,30 @@ export function SinglePostOverlay({ note, onClose, onEdit, onDelete }) {
   );
 }
 
-export function CreateNoteOverlay({ onClose }) {
+const COLORS = ["yellow", "pink", "blue", "green", "orange", "purple"];
+
+export function CreateNoteOverlay({ onClose, onAdd }) {
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [color, setColor] = useState("yellow");
+
+  const handlePost = () => {
+    if (!title.trim()) return;
+    onAdd({
+      id: Date.now(),
+      title: title.trim(),
+      description: body.trim(),
+      color,
+      up: 0,
+      down: 0,
+      date: new Date().toISOString().slice(0, 10),
+    });
+  };
+
   return (
     <div className="live-view-overlay" role="presentation" onMouseDown={onClose}>
       <div
-        className="create-note-modal note-yellow"
+        className={`create-note-modal note-${color}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="create-note-title"
@@ -57,33 +77,32 @@ export function CreateNoteOverlay({ onClose }) {
           type="text"
           id="create-note-title"
           placeholder="Give it a title..."
-          readOnly
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
-        <div
+        <textarea
           className="note-input note-input-body"
-          style={{
-            color: "rgba(0, 0, 0, 0.35)",
-            fontStyle: "italic",
-            fontWeight: 400,
-          }}
-        >
-          What happened? Tell the board...
-        </div>
+          placeholder="What happened? Tell the board..."
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+        />
         <div className="create-note-footer">
           <div className="note-swatch-row">
             <span className="note-swatch-label">Color:</span>
-            <span className="swatch swatch-yellow selected" title="Yellow" />
-            <span className="swatch swatch-pink" title="Pink" />
-            <span className="swatch swatch-blue" title="Blue" />
-            <span className="swatch swatch-green" title="Green" />
-            <span className="swatch swatch-orange" title="Orange" />
-            <span className="swatch swatch-purple" title="Purple" />
+            {COLORS.map((c) => (
+              <span
+                key={c}
+                className={`swatch swatch-${c}${color === c ? " selected" : ""}`}
+                title={c}
+                onClick={() => setColor(c)}
+              />
+            ))}
           </div>
           <div className="create-note-actions">
             <button type="button" className="btn-note-cancel" onClick={onClose}>
               Cancel
             </button>
-            <button type="button" className="btn-note-save" onClick={onClose}>
+            <button type="button" className="btn-note-save" onClick={handlePost}>
               Post
             </button>
           </div>
