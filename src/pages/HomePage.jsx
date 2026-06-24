@@ -2,7 +2,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import StickyNote from "../components/StickyNote";
 import RecentCard from "../components/RecentCard";
-import { DISPLAY_NOTES, TILTS } from "../data/notes";
+import { NOTES, TILTS } from "../data/notes";
 import {
   CreateNoteOverlay,
   DeleteNoteOverlay,
@@ -12,16 +12,17 @@ import {
 import { useState } from "react";
 
 export default function HomePage() {
-  const [selectedNote, setSelectedNote] = useState(null);
+  const [notes, setNotes] = useState(NOTES);
+  const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [activeView, setActiveView] = useState(null);
 
-  const handleSingleViewClick = (note) => {
-    setSelectedNote(note);
-    setActiveView("single");
-  };
+  const selectedNote = notes.find((n) => n.id === selectedNoteId) ?? null;
 
-  const closeView = () => {
-    setActiveView(null);
+  const closeView = () => setActiveView(null);
+
+  const handleSingleViewClick = (note) => {
+    setSelectedNoteId(note.id);
+    setActiveView("single");
   };
 
   return (
@@ -34,7 +35,7 @@ export default function HomePage() {
             <span className="section-sub">Most popular this week</span>
           </div>
           <div className="corkboard" id="popularBoard">
-            {DISPLAY_NOTES.map((note, i) => (
+            {notes.slice(0, 5).map((note, i) => (
               <StickyNote
                 key={note.id}
                 note={note}
@@ -57,7 +58,7 @@ export default function HomePage() {
             <span className="section-sub">Freshly pinned to the board</span>
           </div>
           <div className="recent-grid" id="recentBoard">
-            {DISPLAY_NOTES.map((note) => (
+            {notes.map((note) => (
               <RecentCard
                 key={note.id}
                 note={note}
