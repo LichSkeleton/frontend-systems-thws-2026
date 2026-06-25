@@ -1,17 +1,19 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import StickyNote from "../components/StickyNote";
-import { NOTES, TILTS, RECENT_TILTS } from "../data/notes";
+import { TILTS, RECENT_TILTS } from "../data/notes";
+import { useNotes } from "../context/NotesContext";
 import {
   CreateNoteOverlay,
   DeleteNoteOverlay,
   EditNoteOverlay,
   SinglePostOverlay,
 } from "../components/NoteOverlays.jsx";
+import "../styles/views.css";
 import { useState } from "react";
 
 export default function HomePage() {
-  const [notes, setNotes] = useState(NOTES);
+  const { notes, handleAdd, handleDelete, handleSave, handleVote } = useNotes();
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [activeView, setActiveView] = useState(null);
 
@@ -24,38 +26,24 @@ export default function HomePage() {
     setActiveView("single");
   };
 
-  const handleAdd = (newNote) => {
-    setNotes((prev) => [newNote, ...prev]);
+  const handleAddNote = (newNote) => {
+    handleAdd(newNote);
     closeView();
   };
 
-  const handleDelete = (id) => {
-    setNotes((prev) => prev.filter((n) => n.id !== id));
+  const handleDeleteNote = (id) => {
+    handleDelete(id);
     closeView();
   };
 
-  const handleSave = (updatedNote) => {
-    setNotes((prev) =>
-      prev.map((note) => (note.id === updatedNote.id ? updatedNote : note))
-    );
+  const handleSaveNote = (updatedNote) => {
+    handleSave(updatedNote);
     closeView();
-  };
-
-  const handleVote = (id, next, prev) => {
-    setNotes((notes) =>
-      notes.map((note) => {
-        if (note.id !== id) return note;
-        const updated = { ...note };
-        if (next) updated[next] = note[next] + 1;
-        if (prev) updated[prev] = note[prev] - 1;
-        return updated;
-      })
-    );
   };
 
   return (
     <>
-      <Header variant="home" onCreateNote={() => setActiveView("create")} />
+      <Header onCreateNote={() => setActiveView("create")} />
       <main style={{ flex: 1 }}>
         <section className="board-section">
           <div className="corkboard" id="mainBoard">
@@ -92,12 +80,18 @@ export default function HomePage() {
           onVote={(next, prev) => handleVote(selectedNoteId, next, prev)}
         />
       )}
-      {activeView === "create" && <CreateNoteOverlay onClose={closeView} onAdd={handleAdd} />}
+      {activeView === "create" && (
+        <CreateNoteOverlay onClose={closeView} onAdd={handleAddNote} />
+      )}
       {activeView === "edit" && (
-        <EditNoteOverlay note={selectedNote} onClose={closeView} onSave={handleSave} />
+        <EditNoteOverlay note={selectedNote} onClose={closeView} onSave={handleSaveNote} />
       )}
       {activeView === "delete" && (
-        <DeleteNoteOverlay note={selectedNote} onClose={closeView} onConfirm={handleDelete} />
+        <DeleteNoteOverlay
+          note={selectedNote}
+          onClose={closeView}
+          onConfirm={handleDeleteNote}
+        />
       )}
     </>
   );

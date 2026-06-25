@@ -314,7 +314,7 @@ export default function ViewsPage() {
 
   return (
     <>
-      <Header variant="views" />
+      <Header />
       <ViewsNav activeId={activeId} />
       <main ref={mainRef} style={{ flex: 1 }}>
         <SinglePostView />

@@ -464,6 +464,108 @@ body  {
 }
 
 /* ============================================================
+   SEARCH PAGE
+   ============================================================ */
+.search-section .section-heading {
+  margin-bottom: 24px;
+}
+
+.search-bar {
+  margin-bottom: 28px;
+}
+
+.search-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  font-size: 1.2rem;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.search-input {
+  width: 100%;
+  padding: 16px 48px 16px 52px;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--text);
+  background: #fff;
+  border: 3px solid #8b5e3c;
+  border-radius: 10px;
+  box-shadow: 0 4px 0 #6b4a2e, 0 8px 24px rgba(0, 0, 0, 0.12);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input::placeholder {
+  color: #9a7b62;
+}
+
+.search-input:focus {
+  border-color: var(--yellow-s);
+  box-shadow: 0 4px 0 var(--yellow-s), 0 8px 28px rgba(0, 0, 0, 0.16);
+}
+
+.search-clear {
+  position: absolute;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(45, 24, 16, 0.08);
+  color: var(--text-muted);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.search-clear:hover {
+  background: rgba(45, 24, 16, 0.14);
+  color: var(--text);
+}
+
+.search-results-board {
+  min-height: 220px;
+}
+
+.search-empty {
+  flex-basis: 100%;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  padding: 36px 24px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.search-hint {
+  opacity: 0.85;
+}
+
+/* ============================================================
    FOOTER
    ============================================================ */
 .site-footer {
