@@ -46,8 +46,10 @@ export function CreateNoteOverlay({ onClose, onAdd }) {
   const [body, setBody] = useState("");
   const [color, setColor] = useState("yellow");
 
+  const isPostDisabled = !title.trim() || !body.trim();
+
   const handlePost = () => {
-    if (!title.trim()) return;
+    if (isPostDisabled) return;
     onAdd({
       id: Date.now(),
       title: title.trim(),
@@ -102,7 +104,7 @@ export function CreateNoteOverlay({ onClose, onAdd }) {
             <button type="button" className="btn-note-cancel" onClick={onClose}>
               Cancel
             </button>
-            <button type="button" className="btn-note-save" onClick={handlePost}>
+            <button type="button" className="btn-note-save" onClick={handlePost} disabled={isPostDisabled}>
               Post
             </button>
           </div>
@@ -119,8 +121,10 @@ export function EditNoteOverlay({ note, onClose, onSave }) {
 
   if (!note) return null;
 
+  const isSaveDisabled = !title.trim() || !description.trim();
+
   const handleSave = () => {
-    if (!title.trim()) return;
+    if (isSaveDisabled) return;
     onSave({ ...note, title: title.trim(), description: description.trim(), color });
   };
 
@@ -173,7 +177,7 @@ export function EditNoteOverlay({ note, onClose, onSave }) {
             <button type="button" className="btn-note-cancel" onClick={onClose}>
               Cancel
             </button>
-            <button type="button" className="btn-note-save" onClick={handleSave}>
+            <button type="button" className="btn-note-save" onClick={handleSave} disabled={isSaveDisabled}>
               Save
             </button>
           </div>
