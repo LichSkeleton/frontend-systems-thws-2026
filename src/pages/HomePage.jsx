@@ -13,7 +13,7 @@ import "../styles/views.css";
 import { useState } from "react";
 
 export default function HomePage() {
-  const { paginatedNotes, allNotes, totalNotes, notesPerPage, currentPage, paginate, handleAdd, handleDelete, handleSave, handleVote } = useNotes();
+  const { paginatedNotes, allNotes, totalNotes, notesPerPage, currentPage, paginate, handleAdd, handleDelete, handleSave } = useNotes();
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [activeView, setActiveView] = useState(null);
 
@@ -60,8 +60,7 @@ export default function HomePage() {
                 note={note}
                 tiltDeg={TILTS[i]}
                 onClick={() => handleSingleViewClick(note)}
-                onVote={(next, prev) => handleVote(note.id, next, prev)}
-              />
+                              />
             ))}
             <div className="board-ribbon">Recent Posts</div>
             {paginatedNotes.map((note, i) => ( // Use the paginated notes for recent posts
@@ -70,8 +69,7 @@ export default function HomePage() {
                 note={note}
                 tiltDeg={RECENT_TILTS[i % RECENT_TILTS.length]}
                 onClick={() => handleSingleViewClick(note)}
-                onVote={(next, prev) => handleVote(note.id, next, prev)}
-              />
+                              />
             ))}
           </div>
           <div className="pagination-controls">
@@ -102,7 +100,6 @@ export default function HomePage() {
           onClose={closeView}
           onEdit={() => setActiveView("edit")}
           onDelete={() => setActiveView("delete")}
-          onVote={(next, prev) => handleVote(selectedNoteId, next, prev)}
         />
       )}
       {activeView === "create" && (

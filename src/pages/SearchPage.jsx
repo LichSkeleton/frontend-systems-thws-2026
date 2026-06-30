@@ -15,22 +15,22 @@ import "../styles/views.css";
 function filterNotes(notes, query) {
   const term = query.trim().toLowerCase();
   if (!term) return [];
-
   return notes.filter(
     (note) =>
       note.title.toLowerCase().includes(term) ||
-      note.description.toLowerCase().includes(term)
+      note.description.toLowerCase().includes(term) ||
+      (note.author && note.author.toLowerCase().includes(term))
   );
 }
 
 export default function SearchPage() {
-  const { notes, handleAdd, handleDelete, handleSave, handleVote } = useNotes();
+  const { allNotes, handleAdd, handleDelete, handleSave } = useNotes();
   const [query, setQuery] = useState("");
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [activeView, setActiveView] = useState(null);
 
-  const selectedNote = notes.find((n) => n.id === selectedNoteId) ?? null;
-  const results = useMemo(() => filterNotes(notes, query), [notes, query]);
+  const selectedNote = allNotes.find((n) => n.id === selectedNoteId) ?? null;
+  const results = useMemo(() => filterNotes(allNotes, query), [allNotes, query]);
   const trimmedQuery = query.trim();
 
   const closeView = () => setActiveView(null);
@@ -62,7 +62,7 @@ export default function SearchPage() {
         <section className="board-section search-section">
           <div className="section-heading">
             <h2>Search Notes</h2>
-            <span className="section-sub">Find complaints by keyword</span>
+            <span className="section-sub">Find complaints by keyword or username</span>
           </div>
 
           <form
@@ -81,7 +81,7 @@ export default function SearchPage() {
                 id="note-search"
                 type="search"
                 className="search-input"
-                placeholder="Search titles and descriptions..."
+                placeholder="Search titles, descriptions, or usernames..."
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 autoComplete="off"
@@ -104,8 +104,8 @@ export default function SearchPage() {
               <>
                 <div className="board-ribbon">
                   {results.length === 1
-                    ? `1 match for “${trimmedQuery}”`
-                    : `${results.length} matches for “${trimmedQuery}”`}
+                    ? `1 match for "${trimmedQuery}"`
+                    : `${results.length} matches for "${trimmedQuery}"`}
                 </div>
                 {results.length > 0 ? (
                   results.map((note, i) => (
@@ -114,8 +114,7 @@ export default function SearchPage() {
                       note={note}
                       tiltDeg={RECENT_TILTS[i % RECENT_TILTS.length]}
                       onClick={() => handleSingleViewClick(note)}
-                      onVote={(next, prev) => handleVote(note.id, next, prev)}
-                    />
+                                          />
                   ))
                 ) : (
                   <p className="search-empty">No notes match your search. Try another keyword.</p>
@@ -123,7 +122,7 @@ export default function SearchPage() {
               </>
             ) : (
               <p className="search-empty search-hint">
-                Start typing to search across all note titles and descriptions.
+                Start typing to search across all note titles, descriptions, and usernames.
               </p>
             )}
           </div>
@@ -136,7 +135,6 @@ export default function SearchPage() {
           onClose={closeView}
           onEdit={() => setActiveView("edit")}
           onDelete={() => setActiveView("delete")}
-          onVote={(next, prev) => handleVote(selectedNoteId, next, prev)}
         />
       )}
       {activeView === "create" && (

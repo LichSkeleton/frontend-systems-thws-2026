@@ -1,27 +1,13 @@
-import { useState } from "react";
+import { useNotes } from "../context/NotesContext";
 
-export default function VoteButtons({ up, down, onVote }) {
-  const [localUp, setLocalUp] = useState(up);
-  const [localDown, setLocalDown] = useState(down);
-  const [voted, setVoted] = useState(null);
-
-  const controlled = onVote != null;
-  const upVotes = controlled ? up : localUp;
-  const downVotes = controlled ? down : localDown;
-  const net = upVotes - downVotes;
+export default function VoteButtons({ noteId, up, down }) {
+  const { getUserVote, handleVote } = useNotes();
+  const voted = noteId != null ? getUserVote(noteId) : null;
+  const net = up - down;
 
   const handleClick = (direction) => (event) => {
     event.stopPropagation();
-    const prev = voted;
-    const next = prev === direction ? null : direction;
-    setVoted(next);
-
-    if (controlled) {
-      onVote(next, prev);
-    } else {
-      setLocalUp((c) => c + (next === "up" ? 1 : 0) - (prev === "up" ? 1 : 0));
-      setLocalDown((c) => c + (next === "down" ? 1 : 0) - (prev === "down" ? 1 : 0));
-    }
+    if (noteId != null) handleVote(noteId, direction);
   };
 
   return (
