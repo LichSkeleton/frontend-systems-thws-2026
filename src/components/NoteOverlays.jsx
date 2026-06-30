@@ -88,6 +88,11 @@ export function CreateNoteOverlay({ onClose, onAdd }) {
           value={body}
           onChange={(e) => setBody(e.target.value)}
         />
+        {isPostDisabled && (
+            <p style={{ color: 'red', fontSize: '14px', margin: '10px 0' }}>
+              Title and description can not be empty.
+            </p>
+        )}
         <div className="create-note-footer">
           <div className="note-swatch-row">
             <span className="note-swatch-label">Color:</span>
@@ -161,6 +166,11 @@ export function EditNoteOverlay({ note, onClose, onSave }) {
           ref={(el) => autoResize(el)}
           onChange={(e) => { setDescription(e.target.value); autoResize(e.target); }}
         />
+        {isSaveDisabled && (
+            <p style={{ color: 'red', fontSize: '14px', margin: '10px 0' }}>
+              Title and description can not be empty.
+            </p>
+        )}
         <div className="note-modal-edit-footer">
           <div className="note-swatch-row">
             <span className="note-swatch-label">Color:</span>
