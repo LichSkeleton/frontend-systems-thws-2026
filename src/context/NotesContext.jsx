@@ -4,7 +4,15 @@ import { NOTES } from "../data/notes";
 const NotesContext = createContext(null);
 
 export function NotesProvider({ children }) {
-  const [notes, setNotes] = useState(NOTES);
+  const [notes, setNotes] = useState(NOTES); // This is the full list of notes
+  const [currentPage, setCurrentPage] = useState(1);
+  const [notesPerPage] = useState(50); // Changed to 50 notes per page
+
+  const indexOfLastNote = currentPage * notesPerPage;
+  const indexOfFirstNote = indexOfLastNote - notesPerPage;
+  const currentNotes = notes.slice(indexOfFirstNote, indexOfLastNote);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleAdd = (newNote) => {
     setNotes((prev) => [newNote, ...prev]);
@@ -33,7 +41,20 @@ export function NotesProvider({ children }) {
   };
 
   return (
-    <NotesContext.Provider value={{ notes, handleAdd, handleDelete, handleSave, handleVote }}>
+    <NotesContext.Provider
+      value={{
+        paginatedNotes: currentNotes,
+        allNotes: notes, // Provide all notes for "Top Complaints"
+        totalNotes: notes.length,
+        notesPerPage,
+        currentPage,
+        paginate,
+        handleAdd,
+        handleDelete,
+        handleSave,
+        handleVote,
+      }}
+    >
       {children}
     </NotesContext.Provider>
   );

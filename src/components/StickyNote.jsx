@@ -14,6 +14,7 @@ export default function StickyNote({ note, tiltDeg, onClick, onVote }) {
       <p className="note-preview">{note.description}</p>
       <div className="note-footer">
         <VoteButtons up={note.up} down={note.down} onVote={onVote} />
+        <span className="note-author">By: {note.author}</span>
         <span className="note-date">{formatDate(note.date)}</span>
       </div>
     </article>

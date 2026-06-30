@@ -13,11 +13,12 @@ import "../styles/views.css";
 import { useState } from "react";
 
 export default function HomePage() {
-  const { notes, handleAdd, handleDelete, handleSave, handleVote } = useNotes();
+  const { paginatedNotes, allNotes, totalNotes, notesPerPage, currentPage, paginate, handleAdd, handleDelete, handleSave, handleVote } = useNotes();
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [activeView, setActiveView] = useState(null);
 
-  const selectedNote = notes.find((n) => n.id === selectedNoteId) ?? null;
+  // Find selected note from allNotes to ensure it's always available regardless of pagination
+  const selectedNote = allNotes.find((n) => n.id === selectedNoteId) ?? null;
 
   const closeView = () => setActiveView(null);
 
@@ -41,6 +42,11 @@ export default function HomePage() {
     closeView();
   };
 
+  const totalPages = Math.ceil(totalNotes / notesPerPage);
+
+  // Top 5 complaints (always from all notes, sorted by upvotes - downvotes)
+  const topComplaints = [...allNotes].sort((a, b) => (b.up - b.down) - (a.up - a.down)).slice(0, 5);
+
   return (
     <>
       <Header onCreateNote={() => setActiveView("create")} />
@@ -48,7 +54,7 @@ export default function HomePage() {
         <section className="board-section">
           <div className="corkboard" id="mainBoard">
             <div className="board-ribbon">Top Complaints</div>
-            {[...notes].sort((a, b) => (b.up - b.down) - (a.up - a.down)).slice(0, 5).map((note, i) => (
+            {topComplaints.map((note, i) => (
               <StickyNote
                 key={note.id}
                 note={note}
@@ -58,7 +64,7 @@ export default function HomePage() {
               />
             ))}
             <div className="board-ribbon">Recent Posts</div>
-            {[...notes].sort((a, b) => new Date(b.date) - new Date(a.date)).map((note, i) => (
+            {paginatedNotes.map((note, i) => ( // Use the paginated notes for recent posts
               <StickyNote
                 key={note.id}
                 note={note}
@@ -67,6 +73,25 @@ export default function HomePage() {
                 onVote={(next, prev) => handleVote(note.id, next, prev)}
               />
             ))}
+          </div>
+          <div className="pagination-controls">
+            <button
+              className="btn-pagination"
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              className="btn-pagination"
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
           </div>
         </section>
       </main>

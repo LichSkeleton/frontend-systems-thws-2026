@@ -437,8 +437,8 @@
 /* ---- Create note modal ---- */
 .create-note-modal {
   position: relative;
-  width: 380px;
-  height: 380px;
+  width: min(380px, calc(100vw - 48px));
+  min-height: 380px;
   flex-shrink: 0;
   border-radius: 3px;
   padding: 22px 22px 18px;
@@ -544,4 +544,44 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   color: #b08050;
+}
+
+/* ---- Pagination Controls ---- */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding: 10px 0;
+}
+
+.btn-pagination {
+  background: rgba(0, 0, 0, 0.18);
+  border: 1.5px solid rgba(0, 0, 0, 0.28);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #1a1a1a;
+  font-family: var(--font-ui);
+  transition: background 0.15s;
+}
+
+.btn-pagination:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.btn-pagination:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-controls span {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  color: #2d1810;
+  font-weight: 600;
 }

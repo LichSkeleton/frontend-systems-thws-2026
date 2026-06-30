@@ -24,6 +24,7 @@ export function SinglePostOverlay({ note, onClose, onEdit, onDelete, onVote }) {
         <p className="note-modal-body">{note.description}</p>
         <div className="note-modal-footer">
           <VoteButtons up={note.up} down={note.down} onVote={onVote} />
+          <span className="note-author">By: {note.author}</span>
           <span className="note-date">{formatDate(note.date)}</span>
           <div className="note-modal-actions">
             <button type="button" className="btn-edit-sm" onClick={onEdit}>
@@ -45,6 +46,7 @@ export function CreateNoteOverlay({ onClose, onAdd }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [color, setColor] = useState("yellow");
+  const [author, setAuthor] = useState("");
 
   const isPostDisabled = !title.trim() || !body.trim();
 
@@ -58,6 +60,7 @@ export function CreateNoteOverlay({ onClose, onAdd }) {
       up: 0,
       down: 0,
       date: new Date().toISOString().slice(0, 10),
+      author: author.trim() || "Anonymous",
     });
   };
 
@@ -87,6 +90,13 @@ export function CreateNoteOverlay({ onClose, onAdd }) {
           placeholder="What happened? Tell the board..."
           value={body}
           onChange={(e) => setBody(e.target.value)}
+        />
+        <input
+          className="note-input note-input-author"
+          type="text"
+          placeholder="Your name (optional)"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
         />
         {isPostDisabled && (
             <p style={{ color: 'red', fontSize: '14px', margin: '10px 0' }}>
@@ -123,6 +133,7 @@ export function EditNoteOverlay({ note, onClose, onSave }) {
   const [title, setTitle] = useState(note?.title ?? "");
   const [description, setDescription] = useState(note?.description ?? "");
   const [color, setColor] = useState(note?.color ?? "yellow");
+  const [author, setAuthor] = useState(note?.author ?? "");
 
   if (!note) return null;
 
@@ -130,7 +141,7 @@ export function EditNoteOverlay({ note, onClose, onSave }) {
 
   const handleSave = () => {
     if (isSaveDisabled) return;
-    onSave({ ...note, title: title.trim(), description: description.trim(), color });
+    onSave({ ...note, title: title.trim(), description: description.trim(), color, author: author.trim() || "Anonymous" });
   };
 
   const autoResize = (el) => {
@@ -165,6 +176,13 @@ export function EditNoteOverlay({ note, onClose, onSave }) {
           style={{ overflow: "hidden" }}
           ref={(el) => autoResize(el)}
           onChange={(e) => { setDescription(e.target.value); autoResize(e.target); }}
+        />
+        <input
+          className="note-input note-input-author"
+          type="text"
+          placeholder="Your name (optional)"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
         />
         {isSaveDisabled && (
             <p style={{ color: 'red', fontSize: '14px', margin: '10px 0' }}>
