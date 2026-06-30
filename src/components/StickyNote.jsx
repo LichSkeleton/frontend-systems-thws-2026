@@ -1,7 +1,7 @@
 import { formatDate } from "../utils/formatDate";
 import VoteButtons from "./VoteButtons";
 
-export default function StickyNote({ note, tiltDeg, onClick, onVote }) {
+export default function StickyNote({ note, tiltDeg, onClick }) {
   return (
     <article
       onClick={onClick}
@@ -13,7 +13,7 @@ export default function StickyNote({ note, tiltDeg, onClick, onVote }) {
       </h3>
       <p className="note-preview">{note.description}</p>
       <div className="note-footer">
-        <VoteButtons up={note.up} down={note.down} onVote={onVote} />
+        <VoteButtons noteId={note.id} up={note.up} down={note.down} />
         <span className="note-author">By: {note.author}</span>
         <span className="note-date">{formatDate(note.date)}</span>
       </div>

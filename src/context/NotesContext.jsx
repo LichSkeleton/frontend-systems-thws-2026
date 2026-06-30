@@ -1,16 +1,19 @@
 import { createContext, useContext, useState } from "react";
-import { NOTES } from "../data/notes";
+import { NOTES, USERS } from "../data/notes";
 
 const NotesContext = createContext(null);
 
 export function NotesProvider({ children }) {
-  const [notes, setNotes] = useState(NOTES); // This is the full list of notes
+  const [notes, setNotes] = useState(NOTES);
+  const [votes, setVotes] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [notesPerPage] = useState(50); // Changed to 50 notes per page
+  const [notesPerPage] = useState(50);
+  const [currentUser, setCurrentUser] = useState(USERS[0]);
 
+  const notesByDate = [...notes].sort((a, b) => new Date(b.date) - new Date(a.date));
   const indexOfLastNote = currentPage * notesPerPage;
   const indexOfFirstNote = indexOfLastNote - notesPerPage;
-  const currentNotes = notes.slice(indexOfFirstNote, indexOfLastNote);
+  const currentNotes = notesByDate.slice(indexOfFirstNote, indexOfLastNote);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -28,13 +31,28 @@ export function NotesProvider({ children }) {
     );
   };
 
-  const handleVote = (id, next, prev) => {
+  const getUserVote = (noteId) => votes[noteId]?.[currentUser] ?? null;
+
+  const handleVote = (noteId, direction) => {
+    const prevVote = getUserVote(noteId);
+    const nextVote = prevVote === direction ? null : direction;
+
+    setVotes((prev) => {
+      const noteVotes = { ...(prev[noteId] || {}) };
+      if (nextVote === null) {
+        delete noteVotes[currentUser];
+      } else {
+        noteVotes[currentUser] = nextVote;
+      }
+      return { ...prev, [noteId]: noteVotes };
+    });
+
     setNotes((current) =>
       current.map((note) => {
-        if (note.id !== id) return note;
+        if (note.id !== noteId) return note;
         const updated = { ...note };
-        if (next) updated[next] = note[next] + 1;
-        if (prev) updated[prev] = note[prev] - 1;
+        if (prevVote) updated[prevVote] = note[prevVote] - 1;
+        if (nextVote) updated[nextVote] = note[nextVote] + 1;
         return updated;
       })
     );
@@ -44,15 +62,18 @@ export function NotesProvider({ children }) {
     <NotesContext.Provider
       value={{
         paginatedNotes: currentNotes,
-        allNotes: notes, // Provide all notes for "Top Complaints"
+        allNotes: notes,
         totalNotes: notes.length,
         notesPerPage,
         currentPage,
         paginate,
+        currentUser,
+        setCurrentUser,
         handleAdd,
         handleDelete,
         handleSave,
         handleVote,
+        getUserVote,
       }}
     >
       {children}

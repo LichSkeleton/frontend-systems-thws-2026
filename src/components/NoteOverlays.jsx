@@ -1,9 +1,12 @@
 import { useState } from "react";
 import VoteButtons from "./VoteButtons";
 import { formatDate } from "../utils/formatDate";
+import { useNotes } from "../context/NotesContext";
 
-export function SinglePostOverlay({ note, onClose, onEdit, onDelete, onVote }) {
+export function SinglePostOverlay({ note, onClose, onEdit, onDelete }) {
+  const { currentUser } = useNotes();
   if (!note) return null;
+  const isOwner = currentUser === note.author;
 
   return (
     <div className="live-view-overlay" role="presentation" onMouseDown={onClose}>
@@ -23,17 +26,19 @@ export function SinglePostOverlay({ note, onClose, onEdit, onDelete, onVote }) {
         </h2>
         <p className="note-modal-body">{note.description}</p>
         <div className="note-modal-footer">
-          <VoteButtons up={note.up} down={note.down} onVote={onVote} />
+          <VoteButtons noteId={note.id} up={note.up} down={note.down} />
           <span className="note-author">By: {note.author}</span>
           <span className="note-date">{formatDate(note.date)}</span>
-          <div className="note-modal-actions">
-            <button type="button" className="btn-edit-sm" onClick={onEdit}>
-              Edit
-            </button>
-            <button type="button" className="btn-delete-sm" onClick={onDelete}>
-              Delete
-            </button>
-          </div>
+          {isOwner && (
+            <div className="note-modal-actions">
+              <button type="button" className="btn-edit-sm" onClick={onEdit}>
+                Edit
+              </button>
+              <button type="button" className="btn-delete-sm" onClick={onDelete}>
+                Delete
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -43,15 +48,16 @@ export function SinglePostOverlay({ note, onClose, onEdit, onDelete, onVote }) {
 const COLORS = ["yellow", "pink", "blue", "green", "orange", "purple"];
 
 export function CreateNoteOverlay({ onClose, onAdd }) {
+  const { currentUser } = useNotes();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [color, setColor] = useState("yellow");
-  const [author, setAuthor] = useState("");
+  const [touched, setTouched] = useState(false);
 
   const isPostDisabled = !title.trim() || !body.trim();
 
   const handlePost = () => {
-    if (isPostDisabled) return;
+    if (isPostDisabled) { setTouched(true); return; }
     onAdd({
       id: Date.now(),
       title: title.trim(),
@@ -60,7 +66,7 @@ export function CreateNoteOverlay({ onClose, onAdd }) {
       up: 0,
       down: 0,
       date: new Date().toISOString().slice(0, 10),
-      author: author.trim() || "Anonymous",
+      author: currentUser,
     });
   };
 
@@ -83,25 +89,18 @@ export function CreateNoteOverlay({ onClose, onAdd }) {
           id="create-note-title"
           placeholder="Give it a title..."
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => { setTitle(e.target.value); setTouched(true); }}
         />
         <textarea
           className="note-input note-input-body"
           placeholder="What happened? Tell the board..."
           value={body}
-          onChange={(e) => setBody(e.target.value)}
+          onChange={(e) => { setBody(e.target.value); setTouched(true); }}
         />
-        <input
-          className="note-input note-input-author"
-          type="text"
-          placeholder="Your name (optional)"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-        {isPostDisabled && (
-            <p style={{ color: 'red', fontSize: '14px', margin: '10px 0' }}>
-              Title and description can not be empty.
-            </p>
+        {touched && isPostDisabled && (
+          <p style={{ color: "red", fontSize: "14px", margin: "10px 0" }}>
+            Title and description cannot be empty.
+          </p>
         )}
         <div className="create-note-footer">
           <div className="note-swatch-row">
@@ -133,15 +132,15 @@ export function EditNoteOverlay({ note, onClose, onSave }) {
   const [title, setTitle] = useState(note?.title ?? "");
   const [description, setDescription] = useState(note?.description ?? "");
   const [color, setColor] = useState(note?.color ?? "yellow");
-  const [author, setAuthor] = useState(note?.author ?? "");
+  const [touched, setTouched] = useState(false);
 
   if (!note) return null;
 
   const isSaveDisabled = !title.trim() || !description.trim();
 
   const handleSave = () => {
-    if (isSaveDisabled) return;
-    onSave({ ...note, title: title.trim(), description: description.trim(), color, author: author.trim() || "Anonymous" });
+    if (isSaveDisabled) { setTouched(true); return; }
+    onSave({ ...note, title: title.trim(), description: description.trim(), color });
   };
 
   const autoResize = (el) => {
@@ -168,26 +167,19 @@ export function EditNoteOverlay({ note, onClose, onSave }) {
           type="text"
           id={`edit-note-title-${note.id}`}
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => { setTitle(e.target.value); setTouched(true); }}
         />
         <textarea
           className="note-input note-input-body"
           value={description}
           style={{ overflow: "hidden" }}
           ref={(el) => autoResize(el)}
-          onChange={(e) => { setDescription(e.target.value); autoResize(e.target); }}
+          onChange={(e) => { setDescription(e.target.value); setTouched(true); autoResize(e.target); }}
         />
-        <input
-          className="note-input note-input-author"
-          type="text"
-          placeholder="Your name (optional)"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-        {isSaveDisabled && (
-            <p style={{ color: 'red', fontSize: '14px', margin: '10px 0' }}>
-              Title and description can not be empty.
-            </p>
+        {touched && isSaveDisabled && (
+          <p style={{ color: "red", fontSize: "14px", margin: "10px 0" }}>
+            Title and description cannot be empty.
+          </p>
         )}
         <div className="note-modal-edit-footer">
           <div className="note-swatch-row">

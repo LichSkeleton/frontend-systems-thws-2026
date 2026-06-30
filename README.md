@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-This project is a **React** app built with [Vite](https://vitejs.dev/).
+This project is a React app built with Vite.
 
 ```bash
 npm install
@@ -10,8 +10,6 @@ npm run dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
-
-### Scripts
 
 | Command | Description |
 |---|---|
@@ -21,12 +19,28 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ### Project Structure
 
-- `src/pages/HomePage.jsx` — main board screen
-- `src/pages/ViewsPage.jsx` — screen prototypes (single post, create, edit, delete)
-- `src/components/` — reusable UI components
-- `src/data/notes.js` — mock note data
-- `src/style.css` — shared visual styling
-- `src/styles/views.css` — views page styling
+```
+src/
+  pages/
+    HomePage.jsx        — corkboard with top complaints and paginated recent posts
+    SearchPage.jsx      — keyword and username search across all notes
+    MyNotesPage.jsx     — filtered view of the current user's notes
+    ConsensusPage.jsx   — public opinion stats and live Guardian API news feed
+  components/
+    Header.jsx          — sticky nav with user switcher
+    Footer.jsx          — team info
+    StickyNote.jsx      — individual note card
+    VoteButtons.jsx     — per-user up/down voting
+    NoteOverlays.jsx    — create, edit, delete, and single-post modals
+  context/
+    NotesContext.jsx    — global state (notes, votes, current user, pagination)
+  data/
+    notes.js            — 150 mock notes with USERS and tilt constants
+  styles/
+    views.css           — board and overlay styles
+    consensus.css       — consensus page styles
+  style.css             — global styles and design tokens
+```
 
 ## Team Members
 
@@ -38,7 +52,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## Project Description
 
-A community bulletin board where users post sticky notes voicing complaints about the effects of AI. The board is styled to resemble a physical corkboard, with colorful, visually distinct notes. Users can upvote or downvote notes, which determines display order: top-rated notes appear first, followed by remaining notes from oldest to newest. New notes are added to the bottom of the board where users can navigate using hover scroll. A sort function (by recency or popularity) and keyword search are also included.
+A community bulletin board where users post sticky notes voicing complaints about the effects of AI. The board is styled to resemble a physical corkboard with colorful, randomly-colored sticky notes. Users can upvote or downvote notes on a per-user basis. Top-rated notes appear in a dedicated section at the top. Recent posts are paginated and sorted newest-first.
 
 ## Target Users and Goals
 
@@ -46,26 +60,23 @@ The bulletin board is built for the general public, with a focus on younger user
 
 ## Core Features
 
-- Create, edit, and delete sticky notes
-- Top banner with rotating showcase of highest-rated notes
-- Main bulletin board displayed as a virtual corkboard that expands dynamically as notes are added
-- Thumbs-up/thumbs-down voting system that influences note display order
-- Display order: top-rated notes first, remaining notes sorted oldest to newest
-- Keyword search across all notes
-- Sorting and filtering by recency, popularity, or topic
-
-## Design Document
-
-The first application design document is available at [docs/design-document.md](docs/design-draft-portfolio-submission.md).
+- Create, edit, and delete sticky notes (with form validation)
+- Top Complaints section showing the 5 highest net-voted notes
+- Paginated recent posts board sorted by date (newest first)
+- Per-user thumbs-up/thumbs-down voting (one vote per note per simulated user)
+- Simulated login with three user accounts via a dropdown switcher
+- My Notes page showing only the current user's posts
+- Keyword and username search across all notes
+- Public Consensus page with research statistics and live Guardian API news feed
 
 ## Backend
 
-We plan to mock our data for the backend and will not implement a real data processing system.
+Data is mocked locally in `src/data/notes.js`. The Guardian Open Platform API is used for live AI news articles on the Consensus page.
 
 ## Project Scope
 
-This is a frontend-only project with no working backend, authentication, or real-time functionality. The platform is built for general community use, centered on basic note management and a simple popularity system. Features such as commenting, advanced search, and persistent data storage are outside the scope of this project.
+This is a frontend-only project with no persistent backend or real authentication. The platform is built for general community use, centered on note management, voting, and public opinion data. Features such as real user accounts, commenting, and persistent data storage are outside the scope of this project.
 
 #### Acknowledging AI Technologies
 
-This document was revised with the support of Claude. The authors used the tool to improve wording, but all project-specific content and final decisions were made and reviewed by the team.
+This project was developed with the support of Claude Code (Anthropic). The tool was used to assist with code implementation, debugging, and content research. All project-specific decisions, feature design, and final review were carried out by the team.
