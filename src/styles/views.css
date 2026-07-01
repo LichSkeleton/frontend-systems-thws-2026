@@ -183,7 +183,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: max(24px, var(--safe-top)) max(24px, var(--safe-right)) max(24px, var(--safe-bottom)) max(24px, var(--safe-left));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ---- Enlarged sticky note modal ---- */
@@ -584,4 +586,154 @@
   font-size: 0.9rem;
   color: #2d1810;
   font-weight: 600;
+}
+
+/* ============================================================
+   RESPONSIVE MODALS & OVERLAYS
+   ============================================================ */
+@media (max-width: 768px) {
+  .note-modal,
+  .create-note-modal {
+    width: min(380px, calc(100vw - 32px - var(--safe-left) - var(--safe-right)));
+    min-height: auto;
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px - var(--safe-top) - var(--safe-bottom));
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .live-view-overlay {
+    padding: max(12px, var(--safe-top)) max(12px, var(--safe-right)) max(12px, var(--safe-bottom)) max(12px, var(--safe-left));
+    align-items: flex-start;
+  }
+
+  .note-modal,
+  .create-note-modal {
+    width: min(380px, calc(100vw - 24px - var(--safe-left) - var(--safe-right)));
+    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 24px - var(--safe-top) - var(--safe-bottom));
+    margin: auto 0;
+    padding: 18px 16px 16px;
+  }
+
+  .note-modal-close {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 8px;
+    right: 8px;
+  }
+
+  .note-modal-title,
+  .create-note-modal .note-input-title {
+    font-size: 1.25rem;
+    padding-right: 36px;
+  }
+
+  .note-modal-body {
+    font-size: 0.95rem;
+    -webkit-line-clamp: unset;
+    display: block;
+    overflow: visible;
+  }
+
+  .note-modal-footer,
+  .note-modal-edit-footer,
+  .create-note-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .note-modal-actions,
+  .note-edit-actions,
+  .create-note-actions {
+    margin-left: 0;
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .note-modal-actions .btn-edit-sm,
+  .note-modal-actions .btn-delete-sm,
+  .note-edit-actions .btn-note-cancel,
+  .note-edit-actions .btn-note-save,
+  .create-note-actions .btn-note-cancel,
+  .create-note-actions .btn-note-save {
+    flex: 1;
+    text-align: center;
+    padding: 12px 14px;
+    min-height: 44px;
+  }
+
+  .delete-note-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .delete-note-actions .btn-keep,
+  .delete-note-actions .btn-confirm-delete {
+    width: 100%;
+    padding: 12px 14px;
+    min-height: 44px;
+  }
+
+  .note-input,
+  .note-input-body {
+    font-size: 16px;
+  }
+
+  .pagination-controls {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .btn-pagination {
+    padding: 12px 14px;
+    font-size: 0.82rem;
+    min-height: 44px;
+  }
+
+  .swatch {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 900px) {
+  .views-nav {
+    top: var(--header-h);
+    padding: 0 var(--page-pad);
+  }
+
+  .view-section-label,
+  .view-desc,
+  .viewport-frame {
+    padding-left: var(--page-pad);
+    padding-right: var(--page-pad);
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .live-view-overlay {
+    align-items: flex-start;
+    padding-top: max(8px, var(--safe-top));
+    padding-bottom: max(8px, var(--safe-bottom));
+  }
+
+  .note-modal,
+  .create-note-modal {
+    min-height: auto;
+    max-height: calc(100dvh - 16px - var(--safe-top) - var(--safe-bottom));
+    margin: 0 auto;
+  }
+
+  .note-modal-body {
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    overflow: hidden;
+  }
 }
