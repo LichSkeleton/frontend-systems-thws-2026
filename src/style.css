@@ -115,6 +115,15 @@ body  {
   cursor: default;
 }
 
+.nav-link-consensus {
+  font-weight: 700;
+  border: 1.5px solid rgba(201, 168, 124, 0.4);
+}
+
+.nav-link-consensus:hover {
+  border-color: var(--yellow);
+}
+
 /* User switcher */
 .user-switcher {
   display: flex;

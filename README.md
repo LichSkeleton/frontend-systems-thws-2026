@@ -2,19 +2,24 @@
 
 ## Getting Started
 
-This project is a React app built with Vite.
+This project is a React app built with Vite. Use the following sequence of commands to get started.
 
 ```bash
 npm install
+cp .env.example .env
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Before npm run dev, edit the copied `.env` file and set `VITE_GUARDIAN_API_KEY` to a valid [Guardian Open Platform](https://open-platform.theguardian.com/) API key. The Consensus page's news feed will fail to load without it.
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
+After npm run dev, open [http://localhost:5173](http://localhost:5173) in your browser.
+
+Below are references of npm scripts.
+
+| Command           | Description              |
+| ----------------- | ------------------------ |
+| `npm run dev`     | Start development server |
+| `npm run build`   | Build for production     |
 | `npm run preview` | Preview production build |
 
 ### Project Structure
@@ -44,10 +49,10 @@ src/
 
 ## Team Members
 
-| Name | Email | ID |
-|---|---|---|
-| Mallory Whitt | mallory.whitt@study.thws.de | 10012893 |
-| Timo Brand | timo.brand@study.thws.de | 5124078 |
+| Name                | Email                             | ID       |
+| ------------------- | --------------------------------- | -------- |
+| Mallory Whitt       | mallory.whitt@study.thws.de       | 10012893 |
+| Timo Brand          | timo.brand@study.thws.de          | 5124078  |
 | Vladyslav Zaplitnyi | vladyslav.zaplitnyi@study.thws.de | 10012743 |
 
 ## Project Description
@@ -79,4 +84,4 @@ This is a frontend-only project with no persistent backend or real authenticatio
 
 #### Acknowledging AI Technologies
 
-This project was developed with the support of Claude Code (Anthropic). The tool was used to assist with code implementation, debugging, and content research. All project-specific decisions, feature design, and final review were carried out by the team.
+This project was developed with the support of Claude Code. The tool was used to assist with code implementation, debugging, and content research. All project-specific decisions, feature design, and final review were carried out by the team.

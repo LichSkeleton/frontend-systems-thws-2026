@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/consensus.css";
 
-const GUARDIAN_API_KEY = "ae35c1dc-44c8-4fe5-a486-4c93d0f11f16";
+const GUARDIAN_API_KEY = import.meta.env.VITE_GUARDIAN_API_KEY;
 
 const PEW_STATS = [
   {

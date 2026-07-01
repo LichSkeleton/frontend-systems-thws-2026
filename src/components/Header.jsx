@@ -2,12 +2,12 @@ import { Link, useLocation } from "react-router-dom";
 import { useNotes } from "../context/NotesContext";
 import { USERS } from "../data/notes";
 
-function NavLink({ to, label, active }) {
+function NavLink({ to, label, active, className = "" }) {
   if (active) {
-    return <span className="nav-link nav-link-active">{label}</span>;
+    return <span className={`nav-link nav-link-active ${className}`}>{label}</span>;
   }
   return (
-    <Link to={to} className="nav-link" style={{ textDecoration: "none" }}>
+    <Link to={to} className={`nav-link ${className}`} style={{ textDecoration: "none" }}>
       {label}
     </Link>
   );
@@ -31,7 +31,12 @@ export default function Header({ onCreateNote }) {
           <NavLink to="/" label="Board" active={pathname === "/"} />
           <NavLink to="/search" label="Search" active={pathname === "/search"} />
           <NavLink to="/my-notes" label="My Notes" active={pathname === "/my-notes"} />
-          <NavLink to="/consensus" label="Consensus" active={pathname === "/consensus"} />
+          <NavLink
+            to="/consensus"
+            label="Consensus"
+            active={pathname === "/consensus"}
+            className="nav-link-consensus"
+          />
           {onCreateNote && (
             <button type="button" className="btn-post" onClick={onCreateNote}>
               + Post Note
